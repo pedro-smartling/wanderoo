@@ -355,7 +355,27 @@ const WanderoSlotMachine: React.FC<WanderoSlotMachineProps> = ({
           <Heart className="mr-2 h-4 w-4" />
           Save Combo
         </Button>
-        <Button variant="outline" className="h-12 rounded-2xl">
+        <Button 
+          variant="outline" 
+          className="h-12 rounded-2xl"
+          onClick={() => {
+            // Add all current slot activities to calendar
+            const savedActivities = JSON.parse(localStorage.getItem('approvedActivities') || '[]');
+            const newActivities = slots.map((activity, index) => ({
+              id: `combo-${activity.id}-${Date.now()}-${index}`,
+              time: activity.time,
+              title: activity.title,
+              description: activity.description,
+              completed: false,
+              color: ['yellow', 'blue', 'green'][index] as 'yellow' | 'blue' | 'green',
+              category: activity.category,
+              location: activity.location,
+              duration: activity.duration
+            }));
+            
+            localStorage.setItem('approvedActivities', JSON.stringify([...savedActivities, ...newActivities]));
+          }}
+        >
           <Calendar className="mr-2 h-4 w-4" />
           Add to Calendar
         </Button>

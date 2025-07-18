@@ -48,8 +48,28 @@ const ActivityCard: React.FC<ActivityCardProps> = ({
     onClose();
   };
 
+  const addToCalendar = (activity: Activity) => {
+    const savedActivities = JSON.parse(localStorage.getItem('approvedActivities') || '[]');
+    
+    const calendarActivity = {
+      id: `approved-${activity.id}-${Date.now()}`,
+      time: activity.time,
+      title: activity.title,
+      description: activity.description,
+      completed: false,
+      color: 'blue' as const,
+      category: activity.category,
+      location: activity.location,
+      duration: activity.duration
+    };
+
+    const updatedActivities = [...savedActivities, calendarActivity];
+    localStorage.setItem('approvedActivities', JSON.stringify(updatedActivities));
+  };
+
   const handleAccept = () => {
     handleLike();
+    addToCalendar(activity);
     // Navigate to calendar page when activity is accepted
     navigate('/calendar');
   };
