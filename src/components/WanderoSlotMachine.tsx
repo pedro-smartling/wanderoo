@@ -336,6 +336,19 @@ const WanderoSlotMachine: React.FC<WanderoSlotMachineProps> = ({
         </Button>
       </div>
 
+      {/* See Details Button - Only show after spinning */}
+      {spinCount > 0 && (
+        <div className="px-4">
+          <Button 
+            variant="secondary" 
+            className="w-full h-12 rounded-2xl"
+            onClick={() => onActivitySelect(slots[0])}
+          >
+            See Details
+          </Button>
+        </div>
+      )}
+
       {/* Action Buttons */}
       <div className="grid grid-cols-2 gap-3 px-4">
         <Button variant="outline" className="h-12 rounded-2xl">
