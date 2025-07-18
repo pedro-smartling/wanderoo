@@ -39,6 +39,32 @@ const ACTIVITIES: Record<string, Activity[]> = {
       image: 'photo-1472396961693-142e6e269027',
       rating: 4.8,
       difficulty: 'Easy'
+    },
+    {
+      id: '4',
+      title: 'Hiking Adventure',
+      time: '8:00 AM',
+      category: 'Outdoors',
+      icon: '🥾',
+      location: 'Mountain Trail',
+      duration: '3 hours',
+      description: 'Explore scenic mountain paths and enjoy breathtaking views.',
+      image: 'photo-1500673922987-e212871fec22',
+      rating: 4.7,
+      difficulty: 'Medium'
+    },
+    {
+      id: '5',
+      title: 'Beach Volleyball',
+      time: '4:00 PM',
+      category: 'Outdoors',
+      icon: '🏐',
+      location: 'Sandy Beach',
+      duration: '1.5 hours',
+      description: 'Fun beach volleyball game with friends and family.',
+      image: 'photo-1472396961693-142e6e269027',
+      rating: 4.5,
+      difficulty: 'Medium'
     }
   ],
   arts: [
@@ -53,6 +79,32 @@ const ACTIVITIES: Record<string, Activity[]> = {
       description: 'Express your creativity with colors, brushes, and imagination!',
       image: 'photo-1523712999610-f77fbcfc3843',
       rating: 4.9,
+      difficulty: 'Easy'
+    },
+    {
+      id: '6',
+      title: 'Pottery Class',
+      time: '11:00 AM',
+      category: 'Arts',
+      icon: '🏺',
+      location: 'Pottery Studio',
+      duration: '2 hours',
+      description: 'Learn to shape clay and create beautiful ceramic pieces.',
+      image: 'photo-1493397212122-2b85dda8106b',
+      rating: 4.6,
+      difficulty: 'Medium'
+    },
+    {
+      id: '7',
+      title: 'Music Jamming',
+      time: '6:00 PM',
+      category: 'Arts',
+      icon: '🎵',
+      location: 'Music Room',
+      duration: '1 hour',
+      description: 'Join others for a fun music jam session with various instruments.',
+      image: 'photo-1581090464777-f3220bbe1b8b',
+      rating: 4.4,
       difficulty: 'Easy'
     }
   ],
@@ -69,6 +121,88 @@ const ACTIVITIES: Record<string, Activity[]> = {
       image: 'photo-1486312338219-ce68d2c6f44d',
       rating: 4.6,
       difficulty: 'Easy'
+    },
+    {
+      id: '8',
+      title: 'Board Game Night',
+      time: '3:00 PM',
+      category: 'Indoors',
+      icon: '🎲',
+      location: 'Living Room',
+      duration: '2 hours',
+      description: 'Challenge friends and family to exciting board games and puzzles.',
+      image: 'photo-1605810230434-7631ac76ec81',
+      rating: 4.8,
+      difficulty: 'Easy'
+    },
+    {
+      id: '9',
+      title: 'Cooking Class',
+      time: '1:00 PM',
+      category: 'Indoors',
+      icon: '👨‍🍳',
+      location: 'Kitchen',
+      duration: '2.5 hours',
+      description: 'Learn to cook delicious meals with step-by-step guidance.',
+      image: 'photo-1470813740244-df37b8c1edcb',
+      rating: 4.7,
+      difficulty: 'Medium'
+    }
+  ],
+  museums: [
+    {
+      id: '10',
+      title: 'Science Museum',
+      time: '10:30 AM',
+      category: 'Museums',
+      icon: '🔬',
+      location: 'City Science Center',
+      duration: '3 hours',
+      description: 'Interactive exhibits and hands-on science experiments.',
+      image: 'photo-1500673922987-e212871fec22',
+      rating: 4.8,
+      difficulty: 'Easy'
+    },
+    {
+      id: '11',
+      title: 'Art Museum',
+      time: '1:00 PM',
+      category: 'Museums',
+      icon: '🖼️',
+      location: 'Downtown Gallery',
+      duration: '2 hours',
+      description: 'Explore beautiful paintings and sculptures from local artists.',
+      image: 'photo-1493397212122-2b85dda8106b',
+      rating: 4.5,
+      difficulty: 'Easy'
+    }
+  ],
+  sports: [
+    {
+      id: '12',
+      title: 'Mini Golf',
+      time: '5:00 PM',
+      category: 'Sports',
+      icon: '⛳',
+      location: 'Fun Center',
+      duration: '1 hour',
+      description: 'Family-friendly mini golf course with challenging obstacles.',
+      image: 'photo-1472396961693-142e6e269027',
+      rating: 4.3,
+      difficulty: 'Easy'
+    },
+    {
+      id: '13',
+      title: 'Basketball Game',
+      time: '4:30 PM',
+      category: 'Sports',
+      icon: '🏀',
+      location: 'Sports Complex',
+      duration: '1.5 hours',
+      description: 'Friendly basketball game for all skill levels.',
+      image: 'photo-1581090464777-f3220bbe1b8b',
+      rating: 4.6,
+      difficulty: 'Medium'
     }
   ]
 };
@@ -101,12 +235,30 @@ const WanderoSlotMachine: React.FC<WanderoSlotMachineProps> = ({
 
     setTimeout(() => {
       const activities = getFilteredActivities();
-      const newSlots = [
-        activities[Math.floor(Math.random() * activities.length)] || ACTIVITIES.outdoors[0],
-        activities[Math.floor(Math.random() * activities.length)] || ACTIVITIES.arts[0],
-        activities[Math.floor(Math.random() * activities.length)] || ACTIVITIES.indoors[0]
-      ];
-      setSlots(newSlots);
+      if (activities.length === 0) {
+        // Fallback to all activities if no filters match
+        const allActivities = Object.values(ACTIVITIES).flat();
+        const newSlots = [
+          allActivities[Math.floor(Math.random() * allActivities.length)],
+          allActivities[Math.floor(Math.random() * allActivities.length)],
+          allActivities[Math.floor(Math.random() * allActivities.length)]
+        ];
+        setSlots(newSlots);
+      } else {
+        // Ensure we get different activities for each slot
+        const newSlots = [];
+        for (let i = 0; i < 3; i++) {
+          let randomActivity;
+          let attempts = 0;
+          do {
+            randomActivity = activities[Math.floor(Math.random() * activities.length)];
+            attempts++;
+          } while (newSlots.some(slot => slot?.id === randomActivity?.id) && attempts < 10);
+          
+          newSlots.push(randomActivity);
+        }
+        setSlots(newSlots);
+      }
       setSpinning(false);
     }, 1500);
   };
