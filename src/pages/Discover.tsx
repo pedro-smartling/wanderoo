@@ -264,7 +264,7 @@ const Discover = () => {
                 </div>
                 
                 <Button className="w-full mt-6">
-                  Book Kids Activity
+                  Add to Calendar
                 </Button>
               </div>
             </>
