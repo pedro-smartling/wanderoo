@@ -97,7 +97,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-soft-pink/30">
-      <div className="container mx-auto px-4 py-6 max-w-md">
+      <div className="container mx-auto px-4 py-6 max-w-md bg-white rounded-3xl shadow-soft min-h-screen">
         {/* Reward System */}
         <RewardSystem 
           spinCount={spinCount} 
