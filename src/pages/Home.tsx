@@ -17,7 +17,7 @@ const Home = () => {
       bgColor: 'bg-purple-100',
       iconBg: 'bg-white',
       size: 'large',
-      onClick: () => console.log('Voice feature coming soon')
+      onClick: () => navigate('/chat')
     },
     {
       id: 'spin',
