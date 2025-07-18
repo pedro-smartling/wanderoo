@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
+import { useNavigate } from 'react-router-dom';
 
 interface Activity {
   id: string;
@@ -35,6 +36,7 @@ const ActivityCard: React.FC<ActivityCardProps> = ({
   similarActivities 
 }) => {
   const [isLiked, setIsLiked] = useState(false);
+  const navigate = useNavigate();
 
   const handleLike = () => {
     setIsLiked(true);
@@ -48,7 +50,8 @@ const ActivityCard: React.FC<ActivityCardProps> = ({
 
   const handleAccept = () => {
     handleLike();
-    onClose();
+    // Navigate to calendar page when activity is accepted
+    navigate('/calendar');
   };
 
   return (
