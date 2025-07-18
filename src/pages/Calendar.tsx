@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { ArrowLeft, Calendar as CalendarIcon, Bell } from 'lucide-react';
+import { ArrowLeft, Calendar as CalendarIcon, Bell, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { useNavigate } from 'react-router-dom';
 
 interface ScheduledActivity {
@@ -39,14 +39,8 @@ const Calendar: React.FC = () => {
     return date;
   });
 
-  const toggleActivity = (id: string) => {
-    setActivities(prev => 
-      prev.map(activity => 
-        activity.id === id 
-          ? { ...activity, completed: !activity.completed }
-          : activity
-      )
-    );
+  const deleteActivity = (id: string) => {
+    setActivities(prev => prev.filter(activity => activity.id !== id));
   };
 
   const getActivityBgColor = (color: string) => {
@@ -59,7 +53,6 @@ const Calendar: React.FC = () => {
     }
   };
 
-  const completedTasks = activities.filter(a => a.completed).length;
   const totalTasks = activities.length;
 
   return (
@@ -92,7 +85,7 @@ const Calendar: React.FC = () => {
         <p className="text-muted-foreground text-sm">
           {activities.length === 0 
             ? "No activities scheduled yet. Add some from 'Spin a day'!" 
-            : `You've to complete ${totalTasks - completedTasks} tasks today.`
+            : `You have ${totalTasks} activities scheduled today.`
           }
         </p>
       </div>
@@ -157,22 +150,13 @@ const Calendar: React.FC = () => {
               
               {/* Activity Card */}
               <div className={`flex-1 p-4 rounded-2xl border border-border/50 transition-all duration-300 hover:shadow-soft ${getActivityBgColor(activity.color)}`}>
-                <div className="flex items-start gap-3">
-                  <Checkbox 
-                    checked={activity.completed}
-                    onCheckedChange={() => toggleActivity(activity.id)}
-                    className="mt-1 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
-                  />
+                <div className="flex items-start justify-between">
                   <div className="flex-1">
-                    <p className={`font-medium text-foreground ${
-                      activity.completed ? 'line-through opacity-60' : ''
-                    }`}>
+                    <p className="font-medium text-foreground">
                       {activity.title}
                     </p>
                     {activity.description && (
-                      <p className={`text-sm text-muted-foreground mt-1 ${
-                        activity.completed ? 'line-through opacity-60' : ''
-                      }`}>
+                      <p className="text-sm text-muted-foreground mt-1">
                         {activity.description}
                       </p>
                     )}
@@ -189,6 +173,36 @@ const Calendar: React.FC = () => {
                       )}
                     </div>
                   </div>
+                  
+                  {/* Delete Button with Confirmation */}
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button 
+                        variant="ghost" 
+                        size="sm"
+                        className="ml-2 h-8 w-8 p-0 hover:bg-destructive/10 hover:text-destructive"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Delete Activity</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          Are you sure you want to delete "{activity.title}"? This action cannot be undone.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction 
+                          onClick={() => deleteActivity(activity.id)}
+                          className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                        >
+                          Delete
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
                 </div>
               </div>
             </div>
