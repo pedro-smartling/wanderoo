@@ -9,101 +9,106 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import BottomNav from '@/components/BottomNav';
 
-// Mock activity data with Leeds locations
+// Mock kid-friendly activity data with Leeds locations
 const mockActivities = [
   {
     id: '1',
-    title: 'Photography Workshop',
+    title: 'Mini Art Workshop',
     category: 'Creative',
-    price: 45,
+    price: 15,
     rating: 4.8,
     reviews: 23,
-    location: 'Roundhay Park',
+    location: 'Leeds Children\'s Art Centre',
     coordinates: [-1.492000, 53.833000],
-    image: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32',
-    duration: '2 hours',
-    description: 'Learn photography basics in beautiful Roundhay Park'
+    image: 'https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0',
+    duration: '1 hour',
+    description: 'Fun painting and drawing activities for children aged 3-8',
+    ageRange: '3-8'
   },
   {
     id: '2',
-    title: 'Art Museum Tour',
-    category: 'Cultural',
-    price: 32,
+    title: 'Interactive Science Show',
+    category: 'Educational',
+    price: 20,
     rating: 4.9,
     reviews: 45,
-    location: 'Leeds Art Gallery',
+    location: 'Thackray Medical Museum',
     coordinates: [-1.548567, 53.799722],
-    image: 'https://images.unsplash.com/photo-1554907984-15263bfd63bd',
-    duration: '3 hours',
-    description: 'Guided tour through Leeds contemporary art collections'
+    image: 'https://images.unsplash.com/photo-1532094349884-543bc11b234d',
+    duration: '45 minutes',
+    description: 'Exciting science experiments and demonstrations for curious minds',
+    ageRange: '4-12'
   },
   {
     id: '3',
-    title: 'Rock Climbing',
-    category: 'Adventure',
-    price: 65,
+    title: 'Soft Play Adventure',
+    category: 'Indoor Play',
+    price: 12,
     rating: 4.7,
     reviews: 31,
-    location: 'The Climbing Works',
+    location: 'Jungle Mania Leeds',
     coordinates: [-1.540000, 53.797000],
-    image: 'https://images.unsplash.com/photo-1522163182402-834f871fd851',
-    duration: '4 hours',
-    description: 'Indoor rock climbing with professional instruction'
+    image: 'https://images.unsplash.com/photo-1595950653106-6c9c43c665dd',
+    duration: '2 hours',
+    description: 'Safe soft play area with slides, ball pits and climbing frames',
+    ageRange: '2-8'
   },
   {
     id: '4',
-    title: 'Cooking Class',
+    title: 'Kids Cooking Class',
     category: 'Culinary',
-    price: 78,
+    price: 25,
     rating: 5.0,
     reviews: 67,
-    location: 'Leeds City Centre',
+    location: 'Little Chef Academy',
     coordinates: [-1.548567, 53.799722],
-    image: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136',
-    duration: '2.5 hours',
-    description: 'Learn to make traditional Yorkshire dishes'
+    image: 'https://images.unsplash.com/photo-1581833971358-2c8b550f87b3',
+    duration: '1.5 hours',
+    description: 'Simple cooking activities making healthy snacks and treats',
+    ageRange: '5-12'
   },
   {
     id: '5',
-    title: 'Yoga in the Park',
-    category: 'Wellness',
-    price: 25,
+    title: 'Nature Walk & Games',
+    category: 'Outdoors',
+    price: 8,
     rating: 4.6,
     reviews: 89,
-    location: 'Hyde Park Leeds',
+    location: 'Roundhay Park',
     coordinates: [-1.570000, 53.810000],
-    image: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b',
-    duration: '1 hour',
-    description: 'Morning yoga session in peaceful Hyde Park'
+    image: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e',
+    duration: '1.5 hours',
+    description: 'Guided nature walk with fun outdoor games and activities',
+    ageRange: '3-10'
   },
   {
     id: '6',
-    title: 'Live Music Night',
+    title: 'Music & Movement',
     category: 'Music',
-    price: 55,
+    price: 18,
     rating: 4.8,
     reviews: 42,
-    location: 'Belgrave Music Hall',
+    location: 'Leeds Music Centre',
     coordinates: [-1.546000, 53.802000],
     image: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f',
-    duration: '3 hours',
-    description: 'Live music performance with local craft beers'
+    duration: '45 minutes',
+    description: 'Interactive music session with singing, dancing and instruments',
+    ageRange: '2-6'
   }
 ];
 
-// Category icon mapping
+// Category icon mapping for kids activities
 const categoryIcons = {
-  'Creative': '📸',
-  'Cultural': '🎨',
-  'Adventure': '🧗',
+  'Creative': '🎨',
+  'Educational': '🔬',
+  'Indoor Play': '🏰',
   'Culinary': '👨‍🍳',
-  'Wellness': '🧘',
+  'Outdoors': '🌳',
   'Music': '🎵',
-  'Outdoors': '🌲',
   'Sports': '⚽'
 };
 
-const categories = ['All', 'Creative', 'Cultural', 'Adventure', 'Culinary', 'Wellness', 'Music', 'Outdoors', 'Sports'];
+const categories = ['All', 'Creative', 'Educational', 'Indoor Play', 'Culinary', 'Outdoors', 'Music', 'Sports'];
 
 const Discover = () => {
   const mapContainer = useRef<HTMLDivElement>(null);
@@ -117,41 +122,48 @@ const Discover = () => {
   useEffect(() => {
     if (!mapContainer.current) return;
 
-    mapboxgl.accessToken = 'pk.eyJ1IjoibG92YWJsZS1kZXYiLCJhIjoiY2x3ZWJ6dXNkMWxtbjJxbXQ4dnFmbTJ6ciJ9.VfTjDQIl3VBt9CTc_vfBWg';
-    
-    map.current = new mapboxgl.Map({
-      container: mapContainer.current,
-      style: 'mapbox://styles/mapbox/light-v11',
-      center: [-1.548567, 53.799722], // Leeds center
-      zoom: 12,
-    });
-
-    // Add navigation controls
-    map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
-
-    // Add markers for activities
-    filteredActivities.forEach((activity) => {
-      const markerEl = document.createElement('div');
-      markerEl.className = 'activity-marker';
-      const categoryIcon = categoryIcons[activity.category as keyof typeof categoryIcons] || '📍';
-      markerEl.innerHTML = `
-        <div class="bg-background border border-border rounded-full w-10 h-10 flex items-center justify-center shadow-lg cursor-pointer hover:scale-110 transition-transform">
-          <span class="text-lg">${categoryIcon}</span>
+    // Use a fallback map implementation without Mapbox token for now
+    // This creates a simple placeholder map until a valid token is provided
+    const mapDiv = mapContainer.current;
+    mapDiv.innerHTML = `
+      <div class="w-full h-full bg-muted flex flex-col items-center justify-center relative">
+        <div class="text-center space-y-4">
+          <div class="text-6xl">🗺️</div>
+          <div class="text-lg font-semibold">Leeds Kids Activities Map</div>
+          <div class="text-sm text-muted-foreground">Interactive map coming soon</div>
         </div>
-      `;
-      
-      markerEl.addEventListener('click', () => {
-        setSelectedActivity(activity);
-        setIsSheetOpen(true);
-      });
+        <div class="absolute inset-0 grid grid-cols-3 grid-rows-3 gap-4 p-8">
+          ${filteredActivities.map((activity, index) => {
+            const categoryIcon = categoryIcons[activity.category as keyof typeof categoryIcons] || '📍';
+            const positions = [
+              'col-start-1 row-start-1', 'col-start-3 row-start-1', 'col-start-2 row-start-2',
+              'col-start-1 row-start-3', 'col-start-3 row-start-3', 'col-start-2 row-start-1'
+            ];
+            return `
+              <div class="activity-marker ${positions[index % positions.length]} flex justify-center items-center">
+                <div class="bg-background border border-border rounded-full w-12 h-12 flex items-center justify-center shadow-lg cursor-pointer hover:scale-110 transition-transform" data-activity-id="${activity.id}">
+                  <span class="text-lg">${categoryIcon}</span>
+                </div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      </div>
+    `;
 
-      new mapboxgl.Marker(markerEl)
-        .setLngLat(activity.coordinates as [number, number])
-        .addTo(map.current!);
+    // Add click handlers to markers
+    filteredActivities.forEach((activity) => {
+      const markerEl = mapDiv.querySelector(`[data-activity-id="${activity.id}"]`);
+      if (markerEl) {
+        markerEl.addEventListener('click', () => {
+          setSelectedActivity(activity);
+          setIsSheetOpen(true);
+        });
+      }
     });
 
     return () => {
-      map.current?.remove();
+      // Cleanup if needed
     };
   }, [filteredActivities]);
 
@@ -210,7 +222,7 @@ const Discover = () => {
         {/* Activity Count */}
         <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2">
           <div className="bg-background/90 backdrop-blur-sm border border-border rounded-full px-4 py-2 shadow-lg">
-            <span className="text-sm font-medium">Over 1,000 activities in {searchLocation}</span>
+            <span className="text-sm font-medium">Over 1,000 kids activities in {searchLocation}</span>
           </div>
         </div>
       </div>
@@ -222,6 +234,9 @@ const Discover = () => {
             <>
               <SheetHeader className="pb-4">
                 <SheetTitle className="text-left">{selectedActivity.title}</SheetTitle>
+                <div className="text-sm text-muted-foreground">
+                  Perfect for kids aged {(selectedActivity as any).ageRange}
+                </div>
               </SheetHeader>
               
               <div className="space-y-4 overflow-y-auto">
@@ -235,7 +250,7 @@ const Discover = () => {
                 
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="text-lg font-semibold">${selectedActivity.price}</span>
+                    <span className="text-lg font-semibold">£{selectedActivity.price}</span>
                     <div className="flex items-center gap-2">
                       <span className="text-sm">★ {selectedActivity.rating}</span>
                       <span className="text-sm text-muted-foreground">({selectedActivity.reviews})</span>
@@ -259,7 +274,7 @@ const Discover = () => {
                 </div>
                 
                 <Button className="w-full mt-6">
-                  Book Activity
+                  Book Kids Activity
                 </Button>
               </div>
             </>
