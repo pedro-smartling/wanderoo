@@ -11,8 +11,8 @@ const Home = () => {
   const mainActions = [
     {
       id: 'voice',
-      title: 'Voice Assistant',
-      subtitle: "Let's try it now",
+      title: 'Talk to wanderoo',
+      subtitle: 'Your kids activity planner companion',
       icon: Mic,
       bgColor: 'bg-purple-100',
       iconBg: 'bg-white',
