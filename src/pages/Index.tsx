@@ -29,6 +29,27 @@ const Index = () => {
   const [currentReviewIndex, setCurrentReviewIndex] = useState(0);
   const [reviewedActivities, setReviewedActivities] = useState<{activity: Activity, accepted: boolean}[]>([]);
 
+  // Helper function to resolve time conflicts when saving activities
+  const saveActivitiesWithConflictResolution = (newActivities: any[]) => {
+    const savedActivities = JSON.parse(localStorage.getItem('approvedActivities') || '[]');
+    
+    // Create a map of existing activities by time for quick lookup
+    const existingByTime = new Map();
+    savedActivities.forEach((activity: any) => {
+      existingByTime.set(activity.time, activity);
+    });
+    
+    // Filter out conflicting activities and add new ones
+    const nonConflictingActivities = savedActivities.filter((activity: any) => {
+      return !newActivities.some(newActivity => newActivity.time === activity.time);
+    });
+    
+    // Combine non-conflicting existing activities with new activities
+    const finalActivities = [...nonConflictingActivities, ...newActivities];
+    
+    localStorage.setItem('approvedActivities', JSON.stringify(finalActivities));
+  };
+
   // Mock similar activities for the Tinder-style cards
   const getSimilarActivities = (activity: Activity): Activity[] => {
     const mockSimilar: Activity[] = [
@@ -100,7 +121,6 @@ const Index = () => {
       const acceptedActivities = newReviewed.filter(r => r.accepted).map(r => r.activity);
       
       if (acceptedActivities.length > 0) {
-        const savedActivities = JSON.parse(localStorage.getItem('approvedActivities') || '[]');
         const calendarActivities = acceptedActivities.map((activity, index) => ({
           id: `reviewed-${activity.id}-${Date.now()}-${index}`,
           time: activity.time,
@@ -113,7 +133,7 @@ const Index = () => {
           duration: activity.duration
         }));
         
-        localStorage.setItem('approvedActivities', JSON.stringify([...savedActivities, ...calendarActivities]));
+        saveActivitiesWithConflictResolution(calendarActivities);
         
         // Navigate to calendar
         window.location.href = '/calendar';
