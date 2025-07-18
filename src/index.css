@@ -35,6 +35,14 @@
     --gradient-blue: 210 85% 85%;
     --gradient-mint: 150 40% 85%;
 
+    /* Light orange theme colors */
+    --fun-green: 25 85% 75%;
+    --fun-orange: 25 85% 75%;
+    --fun-pink: 315 70% 80%;
+    --fun-red: 5 85% 75%;
+    --jackpot-green: 25 85% 75%;
+    --jackpot-green-glow: 25 90% 85%;
+
     --muted: 210 40% 96%;
     --muted-foreground: 220 15% 55%;
 
