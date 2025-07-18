@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import JackpotSlotMachine from '@/components/JackpotSlotMachine';
-import FilterControls from '@/components/FilterControls';
+import WelcomeHeader from '@/components/WelcomeHeader';
+import CategoryFilters from '@/components/CategoryFilters';
+import WanderoSlotMachine from '@/components/WanderoSlotMachine';
+import BottomNav from '@/components/BottomNav';
 import ActivityCard from '@/components/ActivityCard';
-import RewardSystem from '@/components/RewardSystem';
 
 interface Activity {
   id: string;
@@ -19,10 +20,11 @@ interface Activity {
 }
 
 const Index = () => {
-  const [activeFilters, setActiveFilters] = useState<string[]>([]);
+  const [activeFilters, setActiveFilters] = useState<string[]>(['outdoors']);
   const [selectedActivity, setSelectedActivity] = useState<Activity | null>(null);
   const [likedActivities, setLikedActivities] = useState<Activity[]>([]);
-  const [spinCount, setSpinCount] = useState(0);
+  const [spinCount, setSpinCount] = useState(3);
+  const [activeTab, setActiveTab] = useState('home');
 
   // Mock similar activities for the Tinder-style cards
   const getSimilarActivities = (activity: Activity): Activity[] => {
@@ -96,28 +98,26 @@ const Index = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-accent/5">
-      <div className="container mx-auto px-4 py-6 max-w-md">
-        {/* Reward System */}
-        <RewardSystem 
-          spinCount={spinCount} 
-          likedActivities={likedActivities.length} 
-        />
+    <div className="min-h-screen bg-background pb-20">
+      <div className="max-w-md mx-auto">
+        {/* Welcome Header */}
+        <WelcomeHeader />
 
-        {/* Filter Controls */}
-        <FilterControls 
+        {/* Category Filters */}
+        <CategoryFilters 
           activeFilters={activeFilters}
           onFilterToggle={handleFilterToggle}
         />
 
-        {/* Jackpot Slot Machine */}
-        <JackpotSlotMachine 
-          onActivitySelect={handleActivitySelect}
+        {/* Wandero Slot Machine */}
+        <WanderoSlotMachine
           activeFilters={activeFilters}
           onSpin={() => setSpinCount(prev => prev + 1)}
+          onActivitySelect={handleActivitySelect}
+          spinCount={spinCount}
         />
 
-        {/* Activity Detail Card (Tinder Style) */}
+        {/* Activity Detail Card */}
         {selectedActivity && (
           <ActivityCard
             activity={selectedActivity}
@@ -128,17 +128,11 @@ const Index = () => {
           />
         )}
 
-        {/* Footer */}
-        <div className="text-center mt-8 pb-6">
-          <p className="text-xs text-muted-foreground">
-            Swipe through activities • Find your perfect day! 🌟
-          </p>
-          {likedActivities.length > 0 && (
-            <p className="text-xs text-primary mt-1">
-              {likedActivities.length} activities in your favorites ❤️
-            </p>
-          )}
-        </div>
+        {/* Bottom Navigation */}
+        <BottomNav 
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+        />
       </div>
     </div>
   );
