@@ -9,7 +9,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import BottomNav from '@/components/BottomNav';
 
-// Mock activity data with locations
+// Mock activity data with Leeds locations
 const mockActivities = [
   {
     id: '1',
@@ -18,11 +18,11 @@ const mockActivities = [
     price: 45,
     rating: 4.8,
     reviews: 23,
-    location: 'Central Park',
-    coordinates: [-73.968285, 40.785091],
+    location: 'Roundhay Park',
+    coordinates: [-1.492000, 53.833000],
     image: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32',
     duration: '2 hours',
-    description: 'Learn photography basics in beautiful Central Park'
+    description: 'Learn photography basics in beautiful Roundhay Park'
   },
   {
     id: '2',
@@ -31,11 +31,11 @@ const mockActivities = [
     price: 32,
     rating: 4.9,
     reviews: 45,
-    location: 'Metropolitan Museum',
-    coordinates: [-73.963244, 40.779437],
+    location: 'Leeds Art Gallery',
+    coordinates: [-1.548567, 53.799722],
     image: 'https://images.unsplash.com/photo-1554907984-15263bfd63bd',
     duration: '3 hours',
-    description: 'Guided tour through world-class art collections'
+    description: 'Guided tour through Leeds contemporary art collections'
   },
   {
     id: '3',
@@ -44,8 +44,8 @@ const mockActivities = [
     price: 65,
     rating: 4.7,
     reviews: 31,
-    location: 'Brooklyn Bridge Park',
-    coordinates: [-73.996736, 40.702323],
+    location: 'The Climbing Works',
+    coordinates: [-1.540000, 53.797000],
     image: 'https://images.unsplash.com/photo-1522163182402-834f871fd851',
     duration: '4 hours',
     description: 'Indoor rock climbing with professional instruction'
@@ -57,11 +57,11 @@ const mockActivities = [
     price: 78,
     rating: 5.0,
     reviews: 67,
-    location: 'Little Italy',
-    coordinates: [-73.997762, 40.719720],
+    location: 'Leeds City Centre',
+    coordinates: [-1.548567, 53.799722],
     image: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136',
     duration: '2.5 hours',
-    description: 'Learn to make authentic Italian pasta from scratch'
+    description: 'Learn to make traditional Yorkshire dishes'
   },
   {
     id: '5',
@@ -70,26 +70,38 @@ const mockActivities = [
     price: 25,
     rating: 4.6,
     reviews: 89,
-    location: 'Prospect Park',
-    coordinates: [-73.969077, 40.660204],
+    location: 'Hyde Park Leeds',
+    coordinates: [-1.570000, 53.810000],
     image: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b',
     duration: '1 hour',
-    description: 'Morning yoga session in peaceful park setting'
+    description: 'Morning yoga session in peaceful Hyde Park'
   },
   {
     id: '6',
-    title: 'Jazz Club Night',
+    title: 'Live Music Night',
     category: 'Music',
     price: 55,
     rating: 4.8,
     reviews: 42,
-    location: 'Greenwich Village',
-    coordinates: [-74.002950, 40.731581],
+    location: 'Belgrave Music Hall',
+    coordinates: [-1.546000, 53.802000],
     image: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f',
     duration: '3 hours',
-    description: 'Live jazz performance with cocktails'
+    description: 'Live music performance with local craft beers'
   }
 ];
+
+// Category icon mapping
+const categoryIcons = {
+  'Creative': '📸',
+  'Cultural': '🎨',
+  'Adventure': '🧗',
+  'Culinary': '👨‍🍳',
+  'Wellness': '🧘',
+  'Music': '🎵',
+  'Outdoors': '🌲',
+  'Sports': '⚽'
+};
 
 const categories = ['All', 'Creative', 'Cultural', 'Adventure', 'Culinary', 'Wellness', 'Music', 'Outdoors', 'Sports'];
 
@@ -98,7 +110,7 @@ const Discover = () => {
   const map = useRef<mapboxgl.Map | null>(null);
   const [selectedActivity, setSelectedActivity] = useState<any>(null);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
-  const [searchLocation, setSearchLocation] = useState('New York');
+  const [searchLocation, setSearchLocation] = useState('Leeds');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [filteredActivities, setFilteredActivities] = useState(mockActivities);
 
@@ -110,7 +122,7 @@ const Discover = () => {
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
       style: 'mapbox://styles/mapbox/light-v11',
-      center: [-73.968285, 40.785091], // NYC center
+      center: [-1.548567, 53.799722], // Leeds center
       zoom: 12,
     });
 
@@ -121,9 +133,10 @@ const Discover = () => {
     filteredActivities.forEach((activity) => {
       const markerEl = document.createElement('div');
       markerEl.className = 'activity-marker';
+      const categoryIcon = categoryIcons[activity.category as keyof typeof categoryIcons] || '📍';
       markerEl.innerHTML = `
-        <div class="bg-background border border-border rounded-full px-3 py-1 shadow-lg cursor-pointer hover:scale-110 transition-transform">
-          <span class="text-sm font-semibold text-foreground">$${activity.price}</span>
+        <div class="bg-background border border-border rounded-full w-10 h-10 flex items-center justify-center shadow-lg cursor-pointer hover:scale-110 transition-transform">
+          <span class="text-lg">${categoryIcon}</span>
         </div>
       `;
       
