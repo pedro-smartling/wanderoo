@@ -13,14 +13,7 @@ const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ userName = "Rachel" }) =>
         <div className="w-12 h-12 bg-muted rounded-full flex items-center justify-center">
           <span className="text-xl">👨‍💼</span>
         </div>
-        <div>
-          <h1 className="text-xl font-semibold text-foreground">
-            Good morning, {userName}!
-          </h1>
-          <p className="text-sm text-muted-foreground">
-            Let's plan your weekend
-          </p>
-        </div>
+        
       </div>
       <div className="flex gap-2">
         <Button variant="ghost" size="sm" className="w-10 h-10 p-0">
