@@ -2,64 +2,65 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Modern App Design System - Blue & Pink Theme */
+/* Headspace-Inspired Design System - Mindful & Calming */
 
 @layer base {
   :root {
-    /* Modern color palette inspired by the reference design */
+    /* Calming Headspace-inspired color palette */
     --background: 0 0% 100%;
-    --foreground: 215 25% 27%;
+    --foreground: 220 15% 25%;
 
     --card: 0 0% 100%;
-    --card-foreground: 215 25% 27%;
+    --card-foreground: 220 15% 25%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 215 25% 27%;
+    --popover-foreground: 220 15% 25%;
 
-    /* Primary: Deep blue from the reference */
-    --primary: 229 84% 53%;
+    /* Primary: Warm Headspace orange */
+    --primary: 20 90% 58%;
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 229 84% 68%;
+    --primary-glow: 20 90% 70%;
     
-    /* Secondary: Soft coral/pink from the reference */
-    --secondary: 351 83% 82%;
-    --secondary-foreground: 215 25% 27%;
+    /* Secondary: Calming blue */
+    --secondary: 200 85% 92%;
+    --secondary-foreground: 220 15% 25%;
 
-    /* Accent: Lighter blue variant */
-    --accent: 220 91% 95%;
-    --accent-foreground: 215 25% 27%;
+    /* Accent: Soft mint green */
+    --accent: 150 40% 92%;
+    --accent-foreground: 220 15% 25%;
 
-    /* Fun gradient colors matching the reference */
-    --gradient-blue: 229 84% 53%;
-    --gradient-pink: 351 83% 82%;
-    --gradient-coral: 14 91% 77%;
+    /* Headspace gradient colors */
+    --gradient-orange: 20 90% 58%;
+    --gradient-peach: 25 85% 75%;
+    --gradient-blue: 210 85% 85%;
+    --gradient-mint: 150 40% 85%;
 
-    --muted: 220 14% 96%;
-    --muted-foreground: 215 16% 47%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 220 15% 55%;
 
-    --destructive: 0 72% 51%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
-    --ring: 229 84% 53%;
+    --border: 210 30% 92%;
+    --input: 210 30% 92%;
+    --ring: 20 90% 58%;
 
-    --radius: 1rem;
+    --radius: 1.5rem;
 
-    /* Modern gradients matching the reference design */
-    --gradient-primary: linear-gradient(135deg, hsl(229 84% 53%) 0%, hsl(229 84% 68%) 100%);
-    --gradient-secondary: linear-gradient(135deg, hsl(351 83% 82%) 0%, hsl(14 91% 77%) 100%);
-    --gradient-mixed: linear-gradient(135deg, hsl(229 84% 53%) 0%, hsl(351 83% 82%) 100%);
-    --gradient-soft: linear-gradient(180deg, hsl(220 91% 98%) 0%, hsl(220 91% 95%) 100%);
+    /* Gentle Headspace-inspired gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(20 90% 58%) 0%, hsl(25 85% 75%) 100%);
+    --gradient-secondary: linear-gradient(135deg, hsl(210 85% 85%) 0%, hsl(200 85% 92%) 100%);
+    --gradient-calming: linear-gradient(135deg, hsl(150 40% 85%) 0%, hsl(210 85% 85%) 100%);
+    --gradient-soft: linear-gradient(180deg, hsl(210 40% 98%) 0%, hsl(210 40% 95%) 100%);
     
-    /* Soft shadows */
-    --shadow-soft: 0 4px 6px -1px hsl(229 84% 53% / 0.1), 0 2px 4px -1px hsl(229 84% 53% / 0.06);
-    --shadow-medium: 0 10px 15px -3px hsl(229 84% 53% / 0.1), 0 4px 6px -2px hsl(229 84% 53% / 0.05);
-    --shadow-large: 0 20px 25px -5px hsl(229 84% 53% / 0.1), 0 10px 10px -5px hsl(229 84% 53% / 0.04);
+    /* Soft, mindful shadows */
+    --shadow-soft: 0 2px 8px -2px hsl(20 90% 58% / 0.08), 0 1px 4px -1px hsl(20 90% 58% / 0.04);
+    --shadow-medium: 0 8px 20px -4px hsl(20 90% 58% / 0.12), 0 2px 8px -2px hsl(20 90% 58% / 0.06);
+    --shadow-large: 0 16px 32px -8px hsl(20 90% 58% / 0.16), 0 4px 16px -4px hsl(20 90% 58% / 0.08);
     
-    /* Animation durations */
-    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    /* Smooth, calming animations */
+    --transition-smooth: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --transition-gentle: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 215 25% 27%;
@@ -119,7 +120,9 @@
 
   body {
     @apply bg-background text-foreground;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+    font-family: 'Circular', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+    font-weight: 400;
+    line-height: 1.6;
   }
 
   /* Mobile-only layout constraints */
