@@ -87,11 +87,8 @@ const Calendar: React.FC = () => {
       {/* Greeting Section */}
       <div className="px-4 mb-8">
         <h1 className="text-3xl font-bold text-foreground mb-2">
-          Hello Monica!
+          My calendar!
         </h1>
-        <p className="text-2xl text-primary font-medium mb-4">
-          Good day
-        </p>
         <p className="text-muted-foreground text-sm">
           {activities.length === 0 
             ? "No activities scheduled yet. Add some from 'Spin a day'!" 
