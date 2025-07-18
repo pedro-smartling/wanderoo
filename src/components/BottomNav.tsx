@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, Compass, Bot, Calendar, User } from 'lucide-react';
+import { Home, Compass, Shuffle, Calendar, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 interface BottomNavProps {
@@ -11,7 +11,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ activeTab = 'home', onTabChange }
   const tabs = [
     { id: 'home', icon: Home, label: 'Home' },
     { id: 'discover', icon: Compass, label: 'Discover' },
-    { id: 'ai', icon: Bot, label: 'AI' },
+    { id: 'spin', icon: Shuffle, label: 'Spin a day' },
     { id: 'calendar', icon: Calendar, label: 'Calendar' },
     { id: 'profile', icon: User, label: 'Profile' }
   ];
