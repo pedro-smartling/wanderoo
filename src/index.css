@@ -120,6 +120,14 @@
   }
 }
 
+/* Map marker styles */
+.activity-marker {
+  cursor: pointer;
+}
+
+.activity-marker:hover .marker-content {
+  transform: scale(1.1);
+}
 
 @layer base {
   * {
