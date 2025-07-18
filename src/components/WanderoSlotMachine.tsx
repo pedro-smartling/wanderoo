@@ -329,7 +329,7 @@ const WanderoSlotMachine: React.FC<WanderoSlotMachineProps> = ({
         <Button 
           onClick={handleSpin}
           disabled={spinning}
-          className="w-full h-14 bg-white text-orange-600 hover:bg-white/90 font-semibold text-lg rounded-2xl disabled:opacity-70 shadow-lg"
+          className="w-full h-14 bg-primary text-primary-foreground font-semibold text-lg rounded-2xl disabled:opacity-70"
         >
           <Shuffle className={`mr-2 h-5 w-5 ${spinning ? 'animate-spin' : ''}`} />
           {spinning ? 'Spinning...' : 'Spin My Day'}
@@ -340,7 +340,8 @@ const WanderoSlotMachine: React.FC<WanderoSlotMachineProps> = ({
       {spinCount > 0 && (
         <div className="px-4">
           <Button 
-            className="w-full h-12 rounded-2xl bg-white text-orange-600 hover:bg-white/90 shadow-lg"
+            variant="secondary" 
+            className="w-full h-12 rounded-2xl"
             onClick={() => onActivitySelect(slots.filter(slot => slot !== null))}
           >
             Review All Activities ({slots.filter(slot => slot !== null).length})
@@ -350,14 +351,16 @@ const WanderoSlotMachine: React.FC<WanderoSlotMachineProps> = ({
 
       {/* Action Buttons */}
       <div className="grid grid-cols-2 gap-3 px-4">
-        <Button className="h-12 rounded-2xl bg-white/20 text-white border-white/30 hover:bg-white/30 backdrop-blur-sm">
+        <Button variant="outline" className="h-12 rounded-2xl">
           <Heart className="mr-2 h-4 w-4" />
           Save Combo
         </Button>
         <Button 
-          className="h-12 rounded-2xl bg-white/20 text-white border-white/30 hover:bg-white/30 backdrop-blur-sm"
+          variant="outline" 
+          className="h-12 rounded-2xl"
           onClick={() => {
-            // Add all current slot activities to calendar with conflict resolution
+            // Add all current slot activities to calendar
+            const savedActivities = JSON.parse(localStorage.getItem('approvedActivities') || '[]');
             const newActivities = slots.map((activity, index) => ({
               id: `combo-${activity.id}-${Date.now()}-${index}`,
               time: activity.time,
@@ -370,13 +373,7 @@ const WanderoSlotMachine: React.FC<WanderoSlotMachineProps> = ({
               duration: activity.duration
             }));
             
-            // Helper function to resolve time conflicts
-            const savedActivities = JSON.parse(localStorage.getItem('approvedActivities') || '[]');
-            const nonConflictingActivities = savedActivities.filter((activity: any) => {
-              return !newActivities.some(newActivity => newActivity.time === activity.time);
-            });
-            const finalActivities = [...nonConflictingActivities, ...newActivities];
-            localStorage.setItem('approvedActivities', JSON.stringify(finalActivities));
+            localStorage.setItem('approvedActivities', JSON.stringify([...savedActivities, ...newActivities]));
           }}
         >
           <Calendar className="mr-2 h-4 w-4" />
