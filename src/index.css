@@ -132,4 +132,37 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  /* Mobile-only layout constraints */
+  #root {
+    max-width: 430px;
+    margin: 0 auto;
+    min-height: 100vh;
+    position: relative;
+  }
+
+  /* Hide on large screens with message */
+  @media (min-width: 768px) {
+    body {
+      @apply bg-muted flex items-center justify-center;
+    }
+    
+    #root {
+      max-width: 430px;
+      min-height: 100vh;
+      @apply bg-background rounded-3xl shadow-2xl;
+      border: 1px solid hsl(var(--border));
+    }
+    
+    #root::before {
+      content: "";
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      @apply bg-card text-card-foreground px-4 py-2 rounded-full text-sm;
+      content: "📱 Mobile App View";
+      z-index: 1000;
+    }
+  }
 }
