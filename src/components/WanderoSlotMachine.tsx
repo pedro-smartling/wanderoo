@@ -117,15 +117,19 @@ const WanderoSlotMachine: React.FC<WanderoSlotMachineProps> = ({
     isSpinning 
   }) => (
     <div 
-      className={`bg-card border rounded-2xl p-4 text-center transition-transform duration-300 ${
-        isSpinning ? 'animate-pulse' : ''
+      className={`bg-card border rounded-2xl p-4 text-center transition-transform duration-300 cursor-pointer hover:shadow-md ${
+        isSpinning ? 'animate-pulse scale-105' : ''
       }`}
-      onClick={() => onActivitySelect(activity)}
+      onClick={() => !isSpinning && onActivitySelect(activity)}
     >
       <div className="text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wide">
         {label}
       </div>
-      <div className="text-4xl mb-2">{activity.icon}</div>
+      <div className={`text-4xl mb-2 transition-transform duration-500 ${
+        isSpinning ? 'animate-spin' : ''
+      }`}>
+        {isSpinning ? '🎰' : activity.icon}
+      </div>
       <h3 className="font-semibold text-sm mb-1">{activity.title}</h3>
       <p className="text-xs text-muted-foreground">{activity.time}</p>
     </div>
@@ -173,10 +177,10 @@ const WanderoSlotMachine: React.FC<WanderoSlotMachineProps> = ({
         <Button 
           onClick={handleSpin}
           disabled={spinning}
-          className="w-full h-14 bg-primary text-primary-foreground font-semibold text-lg rounded-2xl"
+          className="w-full h-14 bg-primary text-primary-foreground font-semibold text-lg rounded-2xl disabled:opacity-70"
         >
-          <Dice1 className="mr-2 h-5 w-5" />
-          Spin My Day
+          <Dice1 className={`mr-2 h-5 w-5 ${spinning ? 'animate-spin' : ''}`} />
+          {spinning ? 'Spinning...' : 'Spin My Day'}
         </Button>
       </div>
 
