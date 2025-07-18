@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Dice1, Heart, Calendar } from 'lucide-react';
+import { Shuffle, Heart, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
@@ -331,7 +331,7 @@ const WanderoSlotMachine: React.FC<WanderoSlotMachineProps> = ({
           disabled={spinning}
           className="w-full h-14 bg-primary text-primary-foreground font-semibold text-lg rounded-2xl disabled:opacity-70"
         >
-          <Dice1 className={`mr-2 h-5 w-5 ${spinning ? 'animate-spin' : ''}`} />
+          <Shuffle className={`mr-2 h-5 w-5 ${spinning ? 'animate-spin' : ''}`} />
           {spinning ? 'Spinning...' : 'Spin My Day'}
         </Button>
       </div>
