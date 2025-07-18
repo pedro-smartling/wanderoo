@@ -6,57 +6,59 @@
 
 @layer base {
   :root {
-    /* Light mode with soft pastels inspired by the reference */
-    --background: 345 100% 97%;
-    --foreground: 220 15% 25%;
+    /* Green theme inspired by the gamified design */
+    --background: 120 20% 95%;
+    --foreground: 120 15% 15%;
 
     --card: 0 0% 100%;
-    --card-foreground: 220 15% 25%;
+    --card-foreground: 120 15% 15%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 220 15% 25%;
+    --popover-foreground: 120 15% 15%;
 
-    /* Soft coral/orange gradient colors */
-    --primary: 25 95% 70%;
+    /* Primary: Rich Green */
+    --primary: 140 75% 45%;
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 15 100% 75%;
+    --primary-glow: 140 85% 55%;
     
-    /* Soft pink accent */
-    --secondary: 345 85% 80%;
-    --secondary-foreground: 220 15% 25%;
+    /* Secondary: Vibrant Orange */
+    --secondary: 25 95% 60%;
+    --secondary-foreground: 0 0% 100%;
 
-    /* Warm orange */
-    --accent: 35 95% 65%;
-    --accent-foreground: 0 0% 100%;
+    /* Accent: Light Green */
+    --accent: 120 50% 75%;
+    --accent-foreground: 120 15% 15%;
 
-    /* Soft pastels */
-    --soft-pink: 345 85% 85%;
-    --soft-coral: 15 90% 75%;
-    --soft-orange: 35 90% 70%;
-    --soft-peach: 25 85% 80%;
+    /* Game colors */
+    --game-green: 140 75% 45%;
+    --game-green-light: 140 50% 75%;
+    --game-green-dark: 140 85% 35%;
+    --game-orange: 25 95% 60%;
+    --game-yellow: 45 95% 65%;
+    --game-red: 0 85% 65%;
 
-    --muted: 345 30% 95%;
-    --muted-foreground: 220 10% 50%;
+    --muted: 120 20% 90%;
+    --muted-foreground: 120 10% 50%;
 
     --destructive: 0 70% 70%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 345 25% 90%;
-    --input: 345 25% 95%;
-    --ring: 25 95% 70%;
+    --border: 120 25% 85%;
+    --input: 120 25% 90%;
+    --ring: 140 75% 45%;
 
     --radius: 2rem;
 
-    /* Soft gradients matching the reference */
-    --gradient-primary: linear-gradient(135deg, hsl(var(--accent)) 0%, hsl(var(--primary)) 50%, hsl(var(--secondary)) 100%);
-    --gradient-soft: linear-gradient(135deg, hsl(var(--soft-orange)) 0%, hsl(var(--soft-coral)) 100%);
-    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%) 0%, hsl(345 50% 98%) 100%);
-    --gradient-background: linear-gradient(135deg, hsl(345 100% 97%) 0%, hsl(345 80% 95%) 100%);
+    /* Green gradients matching the reference */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--game-green)) 0%, hsl(var(--game-green-light)) 100%);
+    --gradient-background: linear-gradient(135deg, hsl(var(--game-green)) 0%, hsl(var(--game-green-light)) 50%, hsl(120 40% 85%) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%) 0%, hsl(120 30% 96%) 100%);
+    --gradient-achievement: linear-gradient(135deg, hsl(var(--game-yellow)) 0%, hsl(var(--game-orange)) 100%);
     
     /* Soft shadows */
-    --shadow-soft: 0 10px 40px -10px hsl(var(--primary) / 0.2);
-    --shadow-card: 0 4px 20px -4px hsl(345 50% 80% / 0.3);
-    --shadow-glow: 0 0 30px hsl(var(--primary) / 0.3);
+    --shadow-soft: 0 10px 40px -10px hsl(var(--game-green) / 0.3);
+    --shadow-card: 0 4px 20px -4px hsl(120 50% 60% / 0.2);
+    --shadow-achievement: 0 8px 30px -8px hsl(var(--game-yellow) / 0.4);
     
     /* Animation durations */
     --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);

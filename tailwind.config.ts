@@ -41,10 +41,12 @@ export default {
 				'fun-pink': 'hsl(var(--fun-pink))',
 				'fun-red': 'hsl(var(--fun-red))',
 				'primary-glow': 'hsl(var(--primary-glow))',
-				'soft-pink': 'hsl(var(--soft-pink))',
-				'soft-coral': 'hsl(var(--soft-coral))',
-				'soft-orange': 'hsl(var(--soft-orange))',
-				'soft-peach': 'hsl(var(--soft-peach))',
+				'game-green': 'hsl(var(--game-green))',
+				'game-green-light': 'hsl(var(--game-green-light))',
+				'game-green-dark': 'hsl(var(--game-green-dark))',
+				'game-orange': 'hsl(var(--game-orange))',
+				'game-yellow': 'hsl(var(--game-yellow))',
+				'game-red': 'hsl(var(--game-red))',
 				muted: {
 					DEFAULT: 'hsl(var(--muted))',
 					foreground: 'hsl(var(--muted-foreground))'
