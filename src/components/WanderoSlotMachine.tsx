@@ -21,7 +21,7 @@ interface Activity {
 interface WanderoSlotMachineProps {
   activeFilters: string[];
   onSpin: () => void;
-  onActivitySelect: (activity: Activity) => void;
+  onActivitySelect: (activities: Activity[]) => void;
   spinCount: number;
 }
 
@@ -272,7 +272,7 @@ const WanderoSlotMachine: React.FC<WanderoSlotMachineProps> = ({
       className={`bg-card border rounded-2xl p-4 text-center transition-transform duration-300 cursor-pointer hover:shadow-md ${
         isSpinning ? 'animate-pulse scale-105' : ''
       }`}
-      onClick={() => !isSpinning && onActivitySelect(activity)}
+      onClick={() => !isSpinning && onActivitySelect([activity])}
     >
       <div className="text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wide">
         {label}
@@ -342,9 +342,9 @@ const WanderoSlotMachine: React.FC<WanderoSlotMachineProps> = ({
           <Button 
             variant="secondary" 
             className="w-full h-12 rounded-2xl"
-            onClick={() => onActivitySelect(slots[0])}
+            onClick={() => onActivitySelect(slots.filter(slot => slot !== null))}
           >
-            See Details
+            Review All Activities ({slots.filter(slot => slot !== null).length})
           </Button>
         </div>
       )}

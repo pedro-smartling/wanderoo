@@ -23,9 +23,12 @@ interface Activity {
 interface ActivityCardProps {
   activity: Activity;
   onClose: () => void;
-  onLike: (activity: Activity) => void;
+  onLike: (activity: Activity, accepted: boolean) => void;
   onDislike: (activity: Activity) => void;
   similarActivities: Activity[];
+  currentIndex?: number;
+  totalCount?: number;
+  isReviewFlow?: boolean;
 }
 
 const ActivityCard: React.FC<ActivityCardProps> = ({ 
@@ -33,19 +36,28 @@ const ActivityCard: React.FC<ActivityCardProps> = ({
   onClose, 
   onLike, 
   onDislike, 
-  similarActivities 
+  similarActivities,
+  currentIndex = 0,
+  totalCount = 1,
+  isReviewFlow = false
 }) => {
   const [isLiked, setIsLiked] = useState(false);
   const navigate = useNavigate();
 
   const handleLike = () => {
     setIsLiked(true);
-    onLike(activity);
+    if (!isReviewFlow) {
+      onLike(activity, true);
+    }
   };
 
   const handleReject = () => {
-    onDislike(activity);
-    onClose();
+    if (isReviewFlow) {
+      onLike(activity, false);
+    } else {
+      onDislike(activity);
+      onClose();
+    }
   };
 
   const addToCalendar = (activity: Activity) => {
@@ -68,10 +80,14 @@ const ActivityCard: React.FC<ActivityCardProps> = ({
   };
 
   const handleAccept = () => {
-    handleLike();
-    addToCalendar(activity);
-    // Navigate to calendar page when activity is accepted
-    navigate('/calendar');
+    if (isReviewFlow) {
+      onLike(activity, true);
+    } else {
+      handleLike();
+      addToCalendar(activity);
+      // Navigate to calendar page when activity is accepted
+      navigate('/calendar');
+    }
   };
 
   return (
@@ -87,7 +103,14 @@ const ActivityCard: React.FC<ActivityCardProps> = ({
           >
             <ArrowLeft className="h-5 w-5" />
           </Button>
-          <h1 className="font-semibold">Activity Details</h1>
+          <div className="flex items-center gap-2">
+            {isReviewFlow && (
+              <span className="text-sm text-muted-foreground">
+                {currentIndex + 1} of {totalCount}
+              </span>
+            )}
+            <h1 className="font-semibold">Activity Details</h1>
+          </div>
           <Button
             variant="ghost"
             size="sm"
@@ -185,7 +208,7 @@ const ActivityCard: React.FC<ActivityCardProps> = ({
               className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90"
             >
               <Check className="mr-2 h-4 w-4" />
-              Accept
+              {isReviewFlow ? 'Accept' : 'Accept'}
             </Button>
           </div>
 

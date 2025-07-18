@@ -25,6 +25,9 @@ const Index = () => {
   const [likedActivities, setLikedActivities] = useState<Activity[]>([]);
   const [spinCount, setSpinCount] = useState(3);
   const [activeTab, setActiveTab] = useState('home');
+  const [reviewQueue, setReviewQueue] = useState<Activity[]>([]);
+  const [currentReviewIndex, setCurrentReviewIndex] = useState(0);
+  const [reviewedActivities, setReviewedActivities] = useState<{activity: Activity, accepted: boolean}[]>([]);
 
   // Mock similar activities for the Tinder-style cards
   const getSimilarActivities = (activity: Activity): Activity[] => {
@@ -70,21 +73,67 @@ const Index = () => {
     );
   };
 
-  const handleActivitySelect = (activity: Activity) => {
-    setSelectedActivity(activity);
+  const handleActivitySelect = (activities: Activity[]) => {
+    // Start the review queue with all 3 activities
+    setReviewQueue(activities);
+    setCurrentReviewIndex(0);
+    setReviewedActivities([]);
+    setSelectedActivity(activities[0]);
   };
 
-  const handleLike = (activity: Activity) => {
-    setLikedActivities(prev => [...prev, activity]);
+  const handleLike = (activity: Activity, accepted: boolean) => {
+    // Add to reviewed activities
+    const newReviewed = [...reviewedActivities, { activity, accepted }];
+    setReviewedActivities(newReviewed);
+    
+    if (accepted) {
+      setLikedActivities(prev => [...prev, activity]);
+    }
+    
+    // Move to next activity or finish
+    if (currentReviewIndex < reviewQueue.length - 1) {
+      const nextIndex = currentReviewIndex + 1;
+      setCurrentReviewIndex(nextIndex);
+      setSelectedActivity(reviewQueue[nextIndex]);
+    } else {
+      // All activities reviewed, save accepted ones to calendar
+      const acceptedActivities = newReviewed.filter(r => r.accepted).map(r => r.activity);
+      
+      if (acceptedActivities.length > 0) {
+        const savedActivities = JSON.parse(localStorage.getItem('approvedActivities') || '[]');
+        const calendarActivities = acceptedActivities.map((activity, index) => ({
+          id: `reviewed-${activity.id}-${Date.now()}-${index}`,
+          time: activity.time,
+          title: activity.title,
+          description: activity.description,
+          completed: false,
+          color: ['yellow', 'blue', 'green'][index % 3] as 'yellow' | 'blue' | 'green',
+          category: activity.category,
+          location: activity.location,
+          duration: activity.duration
+        }));
+        
+        localStorage.setItem('approvedActivities', JSON.stringify([...savedActivities, ...calendarActivities]));
+        
+        // Navigate to calendar
+        window.location.href = '/calendar';
+      } else {
+        // No activities accepted, just close
+        handleCloseCard();
+      }
+    }
   };
 
   const handleDislike = (activity: Activity) => {
-    // Handle dislike - could store for learning preferences
-    console.log('Disliked:', activity.title);
+    // Handle as rejection
+    handleLike(activity, false);
   };
 
   const handleCloseCard = () => {
     setSelectedActivity(null);
+    setReviewQueue([]);
+    setCurrentReviewIndex(0);
+    setReviewedActivities([]);
   };
 
   React.useEffect(() => {
@@ -125,6 +174,9 @@ const Index = () => {
             onLike={handleLike}
             onDislike={handleDislike}
             similarActivities={getSimilarActivities(selectedActivity)}
+            currentIndex={currentReviewIndex}
+            totalCount={reviewQueue.length}
+            isReviewFlow={reviewQueue.length > 0}
           />
         )}
 
