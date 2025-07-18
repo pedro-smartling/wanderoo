@@ -6,7 +6,7 @@ interface WelcomeHeaderProps {
   userName?: string;
 }
 
-const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ userName = "Rachel" }) => {
+const WelcomeHeader: React.FC<WelcomeHeaderProps> = ({ userName = "Pedro" }) => {
   return (
     <div className="flex items-center justify-between mb-8 px-4 pt-4">
       <div className="flex items-center gap-3">
