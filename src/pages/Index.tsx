@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import SlotMachine from '@/components/SlotMachine';
+import JackpotSlotMachine from '@/components/JackpotSlotMachine';
 import FilterControls from '@/components/FilterControls';
 import ActivityCard from '@/components/ActivityCard';
 import RewardSystem from '@/components/RewardSystem';
@@ -110,8 +110,8 @@ const Index = () => {
           onFilterToggle={handleFilterToggle}
         />
 
-        {/* Slot Machine */}
-        <SlotMachine 
+        {/* Jackpot Slot Machine */}
+        <JackpotSlotMachine 
           onActivitySelect={handleActivitySelect}
           activeFilters={activeFilters}
           onSpin={() => setSpinCount(prev => prev + 1)}
