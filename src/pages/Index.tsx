@@ -147,7 +147,7 @@ const Index = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-background pb-20">
+    <div className="min-h-screen bg-gradient-to-br from-orange-400 via-orange-500 to-orange-600 pb-20">
       <div className="max-w-md mx-auto">
         {/* Welcome Header */}
         <WelcomeHeader />

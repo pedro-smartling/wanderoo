@@ -329,7 +329,7 @@ const WanderoSlotMachine: React.FC<WanderoSlotMachineProps> = ({
         <Button 
           onClick={handleSpin}
           disabled={spinning}
-          className="w-full h-14 bg-primary text-primary-foreground font-semibold text-lg rounded-2xl disabled:opacity-70"
+          className="w-full h-14 bg-white text-orange-600 hover:bg-white/90 font-semibold text-lg rounded-2xl disabled:opacity-70 shadow-lg"
         >
           <Shuffle className={`mr-2 h-5 w-5 ${spinning ? 'animate-spin' : ''}`} />
           {spinning ? 'Spinning...' : 'Spin My Day'}
@@ -340,8 +340,7 @@ const WanderoSlotMachine: React.FC<WanderoSlotMachineProps> = ({
       {spinCount > 0 && (
         <div className="px-4">
           <Button 
-            variant="secondary" 
-            className="w-full h-12 rounded-2xl"
+            className="w-full h-12 rounded-2xl bg-white text-orange-600 hover:bg-white/90 shadow-lg"
             onClick={() => onActivitySelect(slots.filter(slot => slot !== null))}
           >
             Review All Activities ({slots.filter(slot => slot !== null).length})
@@ -351,13 +350,12 @@ const WanderoSlotMachine: React.FC<WanderoSlotMachineProps> = ({
 
       {/* Action Buttons */}
       <div className="grid grid-cols-2 gap-3 px-4">
-        <Button variant="outline" className="h-12 rounded-2xl">
+        <Button className="h-12 rounded-2xl bg-white/20 text-white border-white/30 hover:bg-white/30 backdrop-blur-sm">
           <Heart className="mr-2 h-4 w-4" />
           Save Combo
         </Button>
         <Button 
-          variant="outline" 
-          className="h-12 rounded-2xl"
+          className="h-12 rounded-2xl bg-white/20 text-white border-white/30 hover:bg-white/30 backdrop-blur-sm"
           onClick={() => {
             // Add all current slot activities to calendar
             const savedActivities = JSON.parse(localStorage.getItem('approvedActivities') || '[]');
