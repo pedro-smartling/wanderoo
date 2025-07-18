@@ -11,44 +11,24 @@ interface ScheduledActivity {
   description: string;
   completed: boolean;
   color: 'yellow' | 'blue' | 'beige' | 'green';
+  category: string;
+  location: string;
+  duration: string;
 }
 
 const Calendar: React.FC = () => {
   const navigate = useNavigate();
-  const [activities, setActivities] = useState<ScheduledActivity[]>([
-    {
-      id: '1',
-      time: '09:00',
-      title: 'An appointment with a children\'s dentist',
-      description: '',
-      completed: true,
-      color: 'yellow'
-    },
-    {
-      id: '2',
-      time: '15:30',
-      title: 'Get Ben for football lessons',
-      description: 'which will be preparation for the competition, which will take place on 17.03.2024.',
-      completed: false,
-      color: 'blue'
-    },
-    {
-      id: '3',
-      time: '16:00',
-      title: 'Pick up Anita from English lessons',
-      description: '',
-      completed: false,
-      color: 'beige'
-    },
-    {
-      id: '4',
-      time: '20:00',
-      title: 'To go with my husband to a performance',
-      description: 'for which we had been waiting for two months. Time together.',
-      completed: false,
-      color: 'green'
-    }
-  ]);
+  
+  // Load approved activities from localStorage
+  const [activities, setActivities] = useState<ScheduledActivity[]>(() => {
+    const saved = localStorage.getItem('approvedActivities');
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  // Save activities to localStorage whenever activities change
+  React.useEffect(() => {
+    localStorage.setItem('approvedActivities', JSON.stringify(activities));
+  }, [activities]);
 
   const currentDate = new Date();
   const weekDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
@@ -113,7 +93,10 @@ const Calendar: React.FC = () => {
           Good day
         </p>
         <p className="text-muted-foreground text-sm">
-          You've to complete <span className="font-semibold text-foreground">{totalTasks - completedTasks} tasks</span> today.
+          {activities.length === 0 
+            ? "No activities scheduled yet. Add some from 'Spin a day'!" 
+            : `You've to complete ${totalTasks - completedTasks} tasks today.`
+          }
         </p>
       </div>
 
@@ -153,39 +136,67 @@ const Calendar: React.FC = () => {
 
       {/* Schedule */}
       <div className="px-4 space-y-4">
-        {activities.map((activity) => (
-          <div key={activity.id} className="flex items-start gap-4">
-            {/* Time */}
-            <div className="text-2xl font-bold text-foreground w-16 pt-2">
-              {activity.time}
-            </div>
-            
-            {/* Activity Card */}
-            <div className={`flex-1 p-4 rounded-2xl border border-border/50 transition-all duration-300 hover:shadow-soft ${getActivityBgColor(activity.color)}`}>
-              <div className="flex items-start gap-3">
-                <Checkbox 
-                  checked={activity.completed}
-                  onCheckedChange={() => toggleActivity(activity.id)}
-                  className="mt-1 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
-                />
-                <div className="flex-1">
-                  <p className={`font-medium text-foreground ${
-                    activity.completed ? 'line-through opacity-60' : ''
-                  }`}>
-                    {activity.title}
-                  </p>
-                  {activity.description && (
-                    <p className={`text-sm text-muted-foreground mt-1 ${
+        {activities.length === 0 ? (
+          <div className="text-center py-12">
+            <CalendarIcon className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+            <h3 className="text-lg font-semibold text-foreground mb-2">No activities yet</h3>
+            <p className="text-muted-foreground mb-6">
+              Visit 'Spin a day' to discover and add activities to your calendar
+            </p>
+            <Button 
+              onClick={() => navigate('/')}
+              className="h-12 px-6 rounded-2xl"
+            >
+              Go to Spin a day
+            </Button>
+          </div>
+        ) : (
+          activities.map((activity) => (
+            <div key={activity.id} className="flex items-start gap-4">
+              {/* Time */}
+              <div className="text-2xl font-bold text-foreground w-16 pt-2">
+                {activity.time}
+              </div>
+              
+              {/* Activity Card */}
+              <div className={`flex-1 p-4 rounded-2xl border border-border/50 transition-all duration-300 hover:shadow-soft ${getActivityBgColor(activity.color)}`}>
+                <div className="flex items-start gap-3">
+                  <Checkbox 
+                    checked={activity.completed}
+                    onCheckedChange={() => toggleActivity(activity.id)}
+                    className="mt-1 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                  />
+                  <div className="flex-1">
+                    <p className={`font-medium text-foreground ${
                       activity.completed ? 'line-through opacity-60' : ''
                     }`}>
-                      {activity.description}
+                      {activity.title}
                     </p>
-                  )}
+                    {activity.description && (
+                      <p className={`text-sm text-muted-foreground mt-1 ${
+                        activity.completed ? 'line-through opacity-60' : ''
+                      }`}>
+                        {activity.description}
+                      </p>
+                    )}
+                    <div className="flex gap-2 mt-2">
+                      {activity.location && (
+                        <span className="text-xs px-2 py-1 bg-muted rounded-full">
+                          📍 {activity.location}
+                        </span>
+                      )}
+                      {activity.duration && (
+                        <span className="text-xs px-2 py-1 bg-muted rounded-full">
+                          ⏱️ {activity.duration}
+                        </span>
+                      )}
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
     </div>
   );
