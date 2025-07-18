@@ -14,7 +14,170 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      chat_conversations: {
+        Row: {
+          created_at: string
+          id: string
+          title: string | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          title?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          title?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      chat_messages: {
+        Row: {
+          content: string
+          conversation_id: string
+          created_at: string
+          id: string
+          metadata: Json | null
+          role: string
+        }
+        Insert: {
+          content: string
+          conversation_id: string
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          role: string
+        }
+        Update: {
+          content?: string
+          conversation_id?: string
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          role?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chat_messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "chat_conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      events: {
+        Row: {
+          age_group: string
+          category: string
+          contact_info: Json | null
+          created_at: string
+          date_time: string | null
+          description: string | null
+          duration_minutes: number | null
+          external_id: string | null
+          external_url: string | null
+          id: string
+          image_url: string | null
+          location: string | null
+          max_participants: number | null
+          organizer: string | null
+          price: number | null
+          source: string
+          tags: string[] | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          age_group: string
+          category: string
+          contact_info?: Json | null
+          created_at?: string
+          date_time?: string | null
+          description?: string | null
+          duration_minutes?: number | null
+          external_id?: string | null
+          external_url?: string | null
+          id?: string
+          image_url?: string | null
+          location?: string | null
+          max_participants?: number | null
+          organizer?: string | null
+          price?: number | null
+          source: string
+          tags?: string[] | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          age_group?: string
+          category?: string
+          contact_info?: Json | null
+          created_at?: string
+          date_time?: string | null
+          description?: string | null
+          duration_minutes?: number | null
+          external_id?: string | null
+          external_url?: string | null
+          id?: string
+          image_url?: string | null
+          location?: string | null
+          max_participants?: number | null
+          organizer?: string | null
+          price?: number | null
+          source?: string
+          tags?: string[] | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      user_preferences: {
+        Row: {
+          budget_max: number | null
+          created_at: string
+          id: string
+          location: string | null
+          max_distance_km: number | null
+          notification_preferences: Json | null
+          preferred_age_groups: string[] | null
+          preferred_categories: string[] | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          budget_max?: number | null
+          created_at?: string
+          id?: string
+          location?: string | null
+          max_distance_km?: number | null
+          notification_preferences?: Json | null
+          preferred_age_groups?: string[] | null
+          preferred_categories?: string[] | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          budget_max?: number | null
+          created_at?: string
+          id?: string
+          location?: string | null
+          max_distance_km?: number | null
+          notification_preferences?: Json | null
+          preferred_age_groups?: string[] | null
+          preferred_categories?: string[] | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
