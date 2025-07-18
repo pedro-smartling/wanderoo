@@ -339,7 +339,7 @@ const JackpotSlotMachine: React.FC<JackpotSlotMachineProps> = ({ onActivitySelec
             {slots.every(slot => slot !== null) && (
               <Button
                 variant="outline"
-                className="w-full border-jackpot-green text-jackpot-green hover:bg-jackpot-green hover:text-white transition-colors"
+                className="w-full border-orange-300 text-orange-600 hover:bg-orange-300 hover:text-white transition-colors"
               >
                 <Calendar className="mr-2 h-4 w-4" />
                 Add All to Calendar

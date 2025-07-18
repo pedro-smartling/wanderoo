@@ -273,7 +273,7 @@ const SlotMachine: React.FC<SlotMachineProps> = ({ onActivitySelect, activeFilte
         {slots.every(slot => slot !== null) && (
           <Button
             variant="outline"
-            className="w-full border-fun-green text-fun-green hover:bg-fun-green hover:text-white transition-colors"
+            className="w-full border-orange-300 text-orange-600 hover:bg-orange-300 hover:text-white transition-colors"
           >
             <Calendar className="mr-2 h-4 w-4" />
             Add All to Calendar
