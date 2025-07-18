@@ -18,9 +18,9 @@ const FILTER_OPTIONS = [
 
 const FilterControls: React.FC<FilterControlsProps> = ({ activeFilters, onFilterToggle }) => {
   return (
-    <div className="p-4 bg-muted/30 rounded-2xl mb-6">
-      <h3 className="text-lg font-bold text-center mb-4 text-primary">
-        🎛️ Choose Your Adventure
+    <div className="bg-white/60 backdrop-blur-sm rounded-3xl p-6 mb-6 shadow-card border border-soft-pink/20">
+      <h3 className="text-lg font-bold text-center mb-4 text-foreground">
+        ✨ Choose Your Adventure
       </h3>
       
       <div className="flex flex-wrap gap-2 justify-center">
@@ -34,10 +34,10 @@ const FilterControls: React.FC<FilterControlsProps> = ({ activeFilters, onFilter
               size="sm"
               onClick={() => onFilterToggle(filter.id)}
               className={cn(
-                "transition-all duration-300 hover:scale-105 border-2",
+                "transition-all duration-300 hover:scale-105 rounded-2xl",
                 isActive 
-                  ? "bg-primary text-white shadow-lg animate-bounce-in" 
-                  : "hover:bg-primary/10 border-primary/20"
+                  ? "bg-gradient-to-r from-accent to-primary text-white shadow-soft animate-bounce-in border-0" 
+                  : "hover:bg-soft-pink/50 border border-soft-pink/40 bg-white/80"
               )}
             >
               <span className="mr-1 text-base">{filter.icon}</span>

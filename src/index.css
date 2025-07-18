@@ -6,67 +6,62 @@
 
 @layer base {
   :root {
-    /* Updated color palette inspired by the jackpot design */
-    --background: 220 25% 6%;
-    --foreground: 210 40% 98%;
+    /* Light mode with soft pastels inspired by the reference */
+    --background: 345 100% 97%;
+    --foreground: 220 15% 25%;
 
-    --card: 225 25% 8%;
-    --card-foreground: 210 40% 98%;
+    --card: 0 0% 100%;
+    --card-foreground: 220 15% 25%;
 
-    --popover: 225 25% 8%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 15% 25%;
 
-    /* Jackpot-inspired colors */
-    --primary: 270 85% 65%;
+    /* Soft coral/orange gradient colors */
+    --primary: 25 95% 70%;
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 270 100% 80%;
+    --primary-glow: 15 100% 75%;
     
-    /* Neon Green like the slot machine */
-    --jackpot-green: 140 85% 55%;
-    --jackpot-green-glow: 140 100% 70%;
+    /* Soft pink accent */
+    --secondary: 345 85% 80%;
+    --secondary-foreground: 220 15% 25%;
 
-    /* Secondary: Golden yellow for coins */
-    --secondary: 45 95% 65%;
-    --secondary-foreground: 225 25% 8%;
-
-    /* Accent: Electric blue */
-    --accent: 200 85% 55%;
+    /* Warm orange */
+    --accent: 35 95% 65%;
     --accent-foreground: 0 0% 100%;
 
-    /* Fun Colors */
-    --fun-green: 140 85% 55%;
-    --fun-orange: 25 95% 60%;
-    --fun-pink: 320 80% 70%;
-    --fun-red: 10 85% 60%;
+    /* Soft pastels */
+    --soft-pink: 345 85% 85%;
+    --soft-coral: 15 90% 75%;
+    --soft-orange: 35 90% 70%;
+    --soft-peach: 25 85% 80%;
 
-    --muted: 225 15% 15%;
-    --muted-foreground: 210 20% 60%;
+    --muted: 345 30% 95%;
+    --muted-foreground: 220 10% 50%;
 
-    --destructive: 10 85% 60%;
+    --destructive: 0 70% 70%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 225 25% 20%;
-    --input: 225 25% 15%;
-    --ring: 270 85% 65%;
+    --border: 345 25% 90%;
+    --input: 345 25% 95%;
+    --ring: 25 95% 70%;
 
-    --radius: 1.2rem;
+    --radius: 2rem;
 
-    /* Jackpot-style gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary-glow)) 100%);
-    --gradient-jackpot: linear-gradient(135deg, hsl(var(--jackpot-green)) 0%, hsl(var(--jackpot-green-glow)) 100%);
-    --gradient-slot-machine: linear-gradient(180deg, hsl(var(--jackpot-green)) 0%, hsl(var(--primary)) 100%);
-    --gradient-coin: linear-gradient(135deg, hsl(var(--secondary)) 0%, hsl(45 100% 75%) 100%);
-    --gradient-dark: linear-gradient(135deg, hsl(225 25% 8%) 0%, hsl(225 35% 12%) 100%);
+    /* Soft gradients matching the reference */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--accent)) 0%, hsl(var(--primary)) 50%, hsl(var(--secondary)) 100%);
+    --gradient-soft: linear-gradient(135deg, hsl(var(--soft-orange)) 0%, hsl(var(--soft-coral)) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%) 0%, hsl(345 50% 98%) 100%);
+    --gradient-background: linear-gradient(135deg, hsl(345 100% 97%) 0%, hsl(345 80% 95%) 100%);
     
-    /* Glowing shadows */
-    --shadow-neon: 0 0 20px hsl(var(--jackpot-green) / 0.5), 0 0 40px hsl(var(--jackpot-green) / 0.3);
-    --shadow-purple: 0 0 20px hsl(var(--primary) / 0.5), 0 0 40px hsl(var(--primary) / 0.3);
-    --shadow-gold: 0 0 20px hsl(var(--secondary) / 0.5);
+    /* Soft shadows */
+    --shadow-soft: 0 10px 40px -10px hsl(var(--primary) / 0.2);
+    --shadow-card: 0 4px 20px -4px hsl(345 50% 80% / 0.3);
+    --shadow-glow: 0 0 30px hsl(var(--primary) / 0.3);
     
     /* Animation durations */
-    --transition-spin: all 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-    --transition-glow: all 0.3s ease-in-out;
+    --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    --transition-gentle: all 0.3s ease-out;
 
     --sidebar-background: 0 0% 98%;
 

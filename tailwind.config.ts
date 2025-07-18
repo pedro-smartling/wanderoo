@@ -41,8 +41,10 @@ export default {
 				'fun-pink': 'hsl(var(--fun-pink))',
 				'fun-red': 'hsl(var(--fun-red))',
 				'primary-glow': 'hsl(var(--primary-glow))',
-				'jackpot-green': 'hsl(var(--jackpot-green))',
-				'jackpot-green-glow': 'hsl(var(--jackpot-green-glow))',
+				'soft-pink': 'hsl(var(--soft-pink))',
+				'soft-coral': 'hsl(var(--soft-coral))',
+				'soft-orange': 'hsl(var(--soft-orange))',
+				'soft-peach': 'hsl(var(--soft-peach))',
 				muted: {
 					DEFAULT: 'hsl(var(--muted))',
 					foreground: 'hsl(var(--muted-foreground))'
@@ -117,12 +119,12 @@ export default {
 				},
 				'glow-pulse': {
 					'0%, 100%': { 
-						boxShadow: '0 0 20px hsl(var(--jackpot-green) / 0.5)',
+						boxShadow: '0 4px 20px hsl(var(--primary) / 0.3)',
 						filter: 'brightness(1)'
 					},
 					'50%': { 
-						boxShadow: '0 0 40px hsl(var(--jackpot-green) / 0.8), 0 0 60px hsl(var(--jackpot-green) / 0.4)',
-						filter: 'brightness(1.2)'
+						boxShadow: '0 8px 40px hsl(var(--primary) / 0.5), 0 0 60px hsl(var(--soft-coral) / 0.3)',
+						filter: 'brightness(1.05)'
 					}
 				},
 				'coin-flip': {

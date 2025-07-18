@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import JackpotSlotMachine from '@/components/JackpotSlotMachine';
+import SoftSlotMachine from '@/components/SoftSlotMachine';
 import FilterControls from '@/components/FilterControls';
 import ActivityCard from '@/components/ActivityCard';
 import RewardSystem from '@/components/RewardSystem';
@@ -96,7 +96,7 @@ const Index = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-accent/5">
+    <div className="min-h-screen bg-gradient-to-br from-background to-soft-pink/30">
       <div className="container mx-auto px-4 py-6 max-w-md">
         {/* Reward System */}
         <RewardSystem 
@@ -110,8 +110,8 @@ const Index = () => {
           onFilterToggle={handleFilterToggle}
         />
 
-        {/* Jackpot Slot Machine */}
-        <JackpotSlotMachine 
+        {/* Soft Slot Machine */}
+        <SoftSlotMachine 
           onActivitySelect={handleActivitySelect}
           activeFilters={activeFilters}
           onSpin={() => setSpinCount(prev => prev + 1)}
