@@ -71,10 +71,10 @@ const Calendar: React.FC = () => {
 
   const getActivityBgColor = (color: string) => {
     switch (color) {
-      case 'yellow': return 'bg-[#F5F563]';
-      case 'blue': return 'bg-[#A8E6CF]';
-      case 'beige': return 'bg-[#E8D5B7]';
-      case 'green': return 'bg-[#B8E994]';
+      case 'yellow': return 'bg-gradient-to-br from-primary/20 to-primary/10';
+      case 'blue': return 'bg-gradient-to-br from-secondary to-secondary/80';
+      case 'beige': return 'bg-gradient-to-br from-muted to-muted/60';
+      case 'green': return 'bg-gradient-to-br from-accent to-accent/80';
       default: return 'bg-muted';
     }
   };
@@ -85,35 +85,35 @@ const Calendar: React.FC = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-4 pt-12">
+      <div className="flex items-center justify-between px-4 py-4 pt-12 mb-2">
         <Button 
           variant="ghost" 
-          size="icon"
+          size="sm"
           onClick={() => navigate('/')}
-          className="rounded-full"
+          className="w-10 h-10 p-0 rounded-full"
         >
           <ArrowLeft className="h-5 w-5" />
         </Button>
-        <div className="flex items-center gap-3">
-          <Button variant="ghost" size="icon" className="rounded-full">
+        <div className="flex gap-2">
+          <Button variant="ghost" size="sm" className="w-10 h-10 p-0 rounded-full">
             <CalendarIcon className="h-5 w-5" />
           </Button>
-          <Button variant="ghost" size="icon" className="rounded-full">
+          <Button variant="ghost" size="sm" className="w-10 h-10 p-0 rounded-full">
             <Bell className="h-5 w-5" />
           </Button>
         </div>
       </div>
 
       {/* Greeting Section */}
-      <div className="px-4 mb-6">
+      <div className="px-4 mb-8">
         <h1 className="text-3xl font-bold text-foreground mb-2">
           Hello Monica!
         </h1>
-        <p className="text-2xl text-[#FF9F7A] font-medium mb-4">
+        <p className="text-2xl text-primary font-medium mb-4">
           Good day
         </p>
-        <p className="text-muted-foreground">
-          You've to complete <span className="font-semibold text-foreground underline">{totalTasks - completedTasks} tasks</span> today.
+        <p className="text-muted-foreground text-sm">
+          You've to complete <span className="font-semibold text-foreground">{totalTasks - completedTasks} tasks</span> today.
         </p>
       </div>
 
@@ -138,10 +138,10 @@ const Calendar: React.FC = () => {
                 <span className="text-sm text-muted-foreground mb-1">
                   {weekDays[index]}
                 </span>
-                <div className={`w-10 h-10 flex items-center justify-center rounded-2xl font-semibold ${
+                <div className={`w-10 h-10 flex items-center justify-center rounded-2xl font-semibold transition-all duration-300 ${
                   isToday 
-                    ? 'bg-[#B8E994] text-black' 
-                    : 'text-foreground'
+                    ? 'bg-primary text-primary-foreground shadow-md' 
+                    : 'text-foreground hover:bg-muted'
                 }`}>
                   {date.getDate().toString().padStart(2, '0')}
                 </div>
@@ -161,21 +161,21 @@ const Calendar: React.FC = () => {
             </div>
             
             {/* Activity Card */}
-            <div className={`flex-1 p-4 rounded-2xl ${getActivityBgColor(activity.color)}`}>
+            <div className={`flex-1 p-4 rounded-2xl border border-border/50 transition-all duration-300 hover:shadow-soft ${getActivityBgColor(activity.color)}`}>
               <div className="flex items-start gap-3">
                 <Checkbox 
                   checked={activity.completed}
                   onCheckedChange={() => toggleActivity(activity.id)}
-                  className="mt-1 border-2 border-black data-[state=checked]:bg-black data-[state=checked]:border-black"
+                  className="mt-1 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                 />
                 <div className="flex-1">
-                  <p className={`font-medium text-black ${
+                  <p className={`font-medium text-foreground ${
                     activity.completed ? 'line-through opacity-60' : ''
                   }`}>
                     {activity.title}
                   </p>
                   {activity.description && (
-                    <p className={`text-sm text-black/80 mt-1 ${
+                    <p className={`text-sm text-muted-foreground mt-1 ${
                       activity.completed ? 'line-through opacity-60' : ''
                     }`}>
                       {activity.description}
