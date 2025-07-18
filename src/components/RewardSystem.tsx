@@ -105,10 +105,10 @@ const RewardSystem: React.FC<RewardSystemProps> = ({ spinCount, likedActivities 
   }
 
   return (
-    <div className="bg-white/60 backdrop-blur-sm rounded-3xl p-5 mb-6 shadow-card border border-soft-pink/20">
+    <div className="bg-gradient-to-r from-primary/10 to-accent/10 rounded-2xl p-4 mb-6">
       <div className="flex items-center justify-between mb-3">
-        <h3 className="font-bold text-foreground flex items-center gap-2">
-          <Star className="h-5 w-5 text-accent" />
+        <h3 className="font-bold text-primary flex items-center gap-2">
+          <Star className="h-5 w-5" />
           Rewards
         </h3>
         <div className="flex gap-1">

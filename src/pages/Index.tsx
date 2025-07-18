@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
-import GameSlotMachine from '@/components/GameSlotMachine';
+import JackpotSlotMachine from '@/components/JackpotSlotMachine';
 import FilterControls from '@/components/FilterControls';
 import ActivityCard from '@/components/ActivityCard';
 import RewardSystem from '@/components/RewardSystem';
-import GameHeader from '@/components/GameHeader';
-import BottomNavigation from '@/components/BottomNavigation';
 
 interface Activity {
   id: string;
@@ -25,7 +23,6 @@ const Index = () => {
   const [selectedActivity, setSelectedActivity] = useState<Activity | null>(null);
   const [likedActivities, setLikedActivities] = useState<Activity[]>([]);
   const [spinCount, setSpinCount] = useState(0);
-  const [currentTab, setCurrentTab] = useState('home');
 
   // Mock similar activities for the Tinder-style cards
   const getSimilarActivities = (activity: Activity): Activity[] => {
@@ -99,82 +96,50 @@ const Index = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-game-green via-game-green-light to-accent">
-      {/* Game Header */}
-      <GameHeader 
-        title="Adventure Quest"
-        showBack={false}
-        showMenu={true}
-      />
-      
-      {/* Main Content */}
-      <div className="px-4 pb-24 -mt-6 relative z-10">
-        <div className="bg-white rounded-t-3xl p-6 shadow-soft min-h-[calc(100vh-12rem)]">
-          {currentTab === 'home' && (
-            <>
-              {/* Reward System */}
-              <RewardSystem 
-                spinCount={spinCount} 
-                likedActivities={likedActivities.length} 
-              />
+    <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-accent/5">
+      <div className="container mx-auto px-4 py-6 max-w-md">
+        {/* Reward System */}
+        <RewardSystem 
+          spinCount={spinCount} 
+          likedActivities={likedActivities.length} 
+        />
 
-              {/* Filter Controls */}
-              <FilterControls 
-                activeFilters={activeFilters}
-                onFilterToggle={handleFilterToggle}
-              />
+        {/* Filter Controls */}
+        <FilterControls 
+          activeFilters={activeFilters}
+          onFilterToggle={handleFilterToggle}
+        />
 
-              {/* Game Slot Machine */}
-              <GameSlotMachine 
-                onActivitySelect={handleActivitySelect}
-                activeFilters={activeFilters}
-                onSpin={() => setSpinCount(prev => prev + 1)}
-              />
-            </>
-          )}
-          
-          {currentTab === 'lessons' && (
-            <div className="text-center py-12">
-              <div className="text-6xl mb-4">📚</div>
-              <h2 className="text-xl font-bold text-game-green mb-2">Lessons Coming Soon!</h2>
-              <p className="text-muted-foreground">Interactive learning experiences</p>
-            </div>
-          )}
-          
-          {currentTab === 'achievements' && (
-            <div className="text-center py-12">
-              <div className="text-6xl mb-4">🏆</div>
-              <h2 className="text-xl font-bold text-game-green mb-2">Your Achievements</h2>
-              <p className="text-muted-foreground">Collect badges and unlock rewards</p>
-            </div>
-          )}
-          
-          {currentTab === 'profile' && (
-            <div className="text-center py-12">
-              <div className="text-6xl mb-4">👤</div>
-              <h2 className="text-xl font-bold text-game-green mb-2">Your Profile</h2>
-              <p className="text-muted-foreground">Customize your adventure settings</p>
-            </div>
+        {/* Jackpot Slot Machine */}
+        <JackpotSlotMachine 
+          onActivitySelect={handleActivitySelect}
+          activeFilters={activeFilters}
+          onSpin={() => setSpinCount(prev => prev + 1)}
+        />
+
+        {/* Activity Detail Card (Tinder Style) */}
+        {selectedActivity && (
+          <ActivityCard
+            activity={selectedActivity}
+            onClose={handleCloseCard}
+            onLike={handleLike}
+            onDislike={handleDislike}
+            similarActivities={getSimilarActivities(selectedActivity)}
+          />
+        )}
+
+        {/* Footer */}
+        <div className="text-center mt-8 pb-6">
+          <p className="text-xs text-muted-foreground">
+            Swipe through activities • Find your perfect day! 🌟
+          </p>
+          {likedActivities.length > 0 && (
+            <p className="text-xs text-primary mt-1">
+              {likedActivities.length} activities in your favorites ❤️
+            </p>
           )}
         </div>
       </div>
-
-      {/* Bottom Navigation */}
-      <BottomNavigation 
-        activeTab={currentTab}
-        onTabChange={setCurrentTab}
-      />
-
-      {/* Activity Detail Card (Tinder Style) */}
-      {selectedActivity && (
-        <ActivityCard
-          activity={selectedActivity}
-          onClose={handleCloseCard}
-          onLike={handleLike}
-          onDislike={handleDislike}
-          similarActivities={getSimilarActivities(selectedActivity)}
-        />
-      )}
     </div>
   );
 };
