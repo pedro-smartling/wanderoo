@@ -20,6 +20,7 @@ const mockActivities = [
     coordinates: [-1.492000, 53.833000],
     image: 'https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0',
     duration: '1 hour',
+    time: '10:00 AM',
     description: 'Fun painting and drawing activities for children aged 3-8',
     ageRange: '3-8'
   },
@@ -34,6 +35,7 @@ const mockActivities = [
     coordinates: [-1.548567, 53.799722],
     image: 'https://images.unsplash.com/photo-1532094349884-543bc11b234d',
     duration: '45 minutes',
+    time: '2:00 PM',
     description: 'Exciting science experiments and demonstrations for curious minds',
     ageRange: '4-12'
   },
@@ -48,6 +50,7 @@ const mockActivities = [
     coordinates: [-1.540000, 53.797000],
     image: 'https://images.unsplash.com/photo-1595950653106-6c9c43c665dd',
     duration: '2 hours',
+    time: '11:00 AM',
     description: 'Safe soft play area with slides, ball pits and climbing frames',
     ageRange: '2-8'
   },
@@ -62,6 +65,7 @@ const mockActivities = [
     coordinates: [-1.548567, 53.799722],
     image: 'https://images.unsplash.com/photo-1581833971358-2c8b550f87b3',
     duration: '1.5 hours',
+    time: '3:30 PM',
     description: 'Simple cooking activities making healthy snacks and treats',
     ageRange: '5-12'
   },
@@ -76,6 +80,7 @@ const mockActivities = [
     coordinates: [-1.570000, 53.810000],
     image: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e',
     duration: '1.5 hours',
+    time: '9:00 AM',
     description: 'Guided nature walk with fun outdoor games and activities',
     ageRange: '3-10'
   },
@@ -90,6 +95,7 @@ const mockActivities = [
     coordinates: [-1.546000, 53.802000],
     image: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f',
     duration: '45 minutes',
+    time: '4:00 PM',
     description: 'Interactive music session with singing, dancing and instruments',
     ageRange: '2-6'
   }
@@ -125,6 +131,48 @@ const Discover = () => {
   const handleActivityClick = (activity: any) => {
     setSelectedActivity(activity);
     setIsSheetOpen(true);
+  };
+
+  const saveActivityWithConflictResolution = (activity: any) => {
+    const savedActivities = JSON.parse(localStorage.getItem('approvedActivities') || '[]');
+    
+    // Filter out activities with the same time to avoid conflicts
+    const filteredActivities = savedActivities.filter((savedActivity: any) => {
+      return savedActivity.time !== activity.time;
+    });
+    
+    // Create calendar activity object
+    const calendarActivity = {
+      id: `discover-${activity.id}-${Date.now()}`,
+      time: activity.time,
+      title: activity.title,
+      description: activity.description,
+      completed: false,
+      color: 'blue' as 'yellow' | 'blue' | 'green',
+      category: activity.category,
+      location: activity.location,
+      duration: activity.duration
+    };
+    
+    // Add the new activity
+    localStorage.setItem('approvedActivities', JSON.stringify([...filteredActivities, calendarActivity]));
+    
+    return true;
+  };
+
+  const handleAddToCalendar = () => {
+    if (!selectedActivity) return;
+    
+    const saved = saveActivityWithConflictResolution(selectedActivity);
+    
+    if (saved) {
+      // Close the sheet and navigate to calendar
+      setIsSheetOpen(false);
+      setSelectedActivity(null);
+      
+      // Navigate to calendar page
+      window.location.href = '/calendar';
+    }
   };
 
   return (
@@ -263,7 +311,7 @@ const Discover = () => {
                   </Badge>
                 </div>
                 
-                <Button className="w-full mt-6">
+                <Button className="w-full mt-6" onClick={handleAddToCalendar}>
                   Add to Calendar
                 </Button>
               </div>
