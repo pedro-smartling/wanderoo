@@ -1,6 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
-import mapboxgl from 'mapbox-gl';
-import 'mapbox-gl/dist/mapbox-gl.css';
+import React, { useState, useEffect } from 'react';
 import { Search, MapPin, Filter } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -111,8 +109,6 @@ const categoryIcons = {
 const categories = ['All', 'Creative', 'Educational', 'Indoor Play', 'Culinary', 'Outdoors', 'Music', 'Sports'];
 
 const Discover = () => {
-  const mapContainer = useRef<HTMLDivElement>(null);
-  const map = useRef<mapboxgl.Map | null>(null);
   const [selectedActivity, setSelectedActivity] = useState<any>(null);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [searchLocation, setSearchLocation] = useState('Leeds');
@@ -120,59 +116,16 @@ const Discover = () => {
   const [filteredActivities, setFilteredActivities] = useState(mockActivities);
 
   useEffect(() => {
-    if (!mapContainer.current) return;
-
-    // Use a fallback map implementation without Mapbox token for now
-    // This creates a simple placeholder map until a valid token is provided
-    const mapDiv = mapContainer.current;
-    mapDiv.innerHTML = `
-      <div class="w-full h-full bg-muted flex flex-col items-center justify-center relative">
-        <div class="text-center space-y-4">
-          <div class="text-6xl">🗺️</div>
-          <div class="text-lg font-semibold">Leeds Kids Activities Map</div>
-          <div class="text-sm text-muted-foreground">Interactive map coming soon</div>
-        </div>
-        <div class="absolute inset-0 grid grid-cols-3 grid-rows-3 gap-4 p-8">
-          ${filteredActivities.map((activity, index) => {
-            const categoryIcon = categoryIcons[activity.category as keyof typeof categoryIcons] || '📍';
-            const positions = [
-              'col-start-1 row-start-1', 'col-start-3 row-start-1', 'col-start-2 row-start-2',
-              'col-start-1 row-start-3', 'col-start-3 row-start-3', 'col-start-2 row-start-1'
-            ];
-            return `
-              <div class="activity-marker ${positions[index % positions.length]} flex justify-center items-center">
-                <div class="bg-background border border-border rounded-full w-12 h-12 flex items-center justify-center shadow-lg cursor-pointer hover:scale-110 transition-transform" data-activity-id="${activity.id}">
-                  <span class="text-lg">${categoryIcon}</span>
-                </div>
-              </div>
-            `;
-          }).join('')}
-        </div>
-      </div>
-    `;
-
-    // Add click handlers to markers
-    filteredActivities.forEach((activity) => {
-      const markerEl = mapDiv.querySelector(`[data-activity-id="${activity.id}"]`);
-      if (markerEl) {
-        markerEl.addEventListener('click', () => {
-          setSelectedActivity(activity);
-          setIsSheetOpen(true);
-        });
-      }
-    });
-
-    return () => {
-      // Cleanup if needed
-    };
-  }, [filteredActivities]);
-
-  useEffect(() => {
     const filtered = selectedCategory === 'All' 
       ? mockActivities 
       : mockActivities.filter(activity => activity.category === selectedCategory);
     setFilteredActivities(filtered);
   }, [selectedCategory]);
+
+  const handleActivityClick = (activity: any) => {
+    setSelectedActivity(activity);
+    setIsSheetOpen(true);
+  };
 
   return (
     <div className="min-h-screen bg-background pb-20">
@@ -217,7 +170,44 @@ const Discover = () => {
 
       {/* Map Container */}
       <div className="relative flex-1" style={{ height: 'calc(100vh - 200px)' }}>
-        <div ref={mapContainer} className="absolute inset-0" />
+        <div className="w-full h-full bg-muted flex flex-col items-center justify-center relative">
+          {/* Map Header */}
+          <div className="text-center space-y-4 z-10">
+            <div className="text-6xl">🗺️</div>
+            <div className="text-lg font-semibold">Leeds Kids Activities Map</div>
+            <div className="text-sm text-muted-foreground">Tap the icons to explore activities</div>
+          </div>
+          
+          {/* Activity Markers Grid */}
+          <div className="absolute inset-0 grid grid-cols-3 grid-rows-3 gap-4 p-8">
+            {filteredActivities.map((activity, index) => {
+              const categoryIcon = categoryIcons[activity.category as keyof typeof categoryIcons] || '📍';
+              const positions = [
+                'col-start-1 row-start-1', 
+                'col-start-3 row-start-1', 
+                'col-start-2 row-start-2',
+                'col-start-1 row-start-3', 
+                'col-start-3 row-start-3', 
+                'col-start-2 row-start-1'
+              ];
+              const position = positions[index % positions.length];
+              
+              return (
+                <div 
+                  key={activity.id}
+                  className={`flex justify-center items-center ${position}`}
+                >
+                  <div 
+                    className="bg-background border border-border rounded-full w-12 h-12 flex items-center justify-center shadow-lg cursor-pointer hover:scale-110 transition-transform"
+                    onClick={() => handleActivityClick(activity)}
+                  >
+                    <span className="text-lg">{categoryIcon}</span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
         
         {/* Activity Count */}
         <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2">
