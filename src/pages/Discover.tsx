@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Search, MapPin, Filter } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import BottomNav from '@/components/BottomNav';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 
@@ -125,12 +125,44 @@ const categoryIcons = {
 
 const categories = ['All', 'Creative', 'Educational', 'Indoor Play', 'Culinary', 'Outdoors', 'Music', 'Sports'];
 
+// Component to update map center when location changes
+const MapUpdater = ({ center }: { center: [number, number] }) => {
+  const map = useMap();
+  
+  useEffect(() => {
+    map.setView(center, 12);
+  }, [center, map]);
+  
+  return null;
+};
+
+// Geocoding function using OpenStreetMap Nominatim API (free)
+const geocodeLocation = async (location: string): Promise<[number, number] | null> => {
+  try {
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(location)}&limit=1`
+    );
+    const data = await response.json();
+    
+    if (data && data.length > 0) {
+      return [parseFloat(data[0].lat), parseFloat(data[0].lon)];
+    }
+    return null;
+  } catch (error) {
+    console.error('Geocoding error:', error);
+    return null;
+  }
+};
+
 const Discover = () => {
   const [selectedActivity, setSelectedActivity] = useState<any>(null);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [searchLocation, setSearchLocation] = useState('Leeds');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [filteredActivities, setFilteredActivities] = useState(mockActivities);
+  const [mapCenter, setMapCenter] = useState<[number, number]>([53.8008, -1.5491]); // Leeds coordinates
+  const [isSearching, setIsSearching] = useState(false);
+  const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     const filtered = selectedCategory === 'All' 
@@ -138,6 +170,30 @@ const Discover = () => {
       : mockActivities.filter(activity => activity.category === selectedCategory);
     setFilteredActivities(filtered);
   }, [selectedCategory]);
+
+  // Effect to handle location search with debouncing
+  useEffect(() => {
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
+
+    searchTimeoutRef.current = setTimeout(async () => {
+      if (searchLocation.trim() && searchLocation.trim() !== '') {
+        setIsSearching(true);
+        const coordinates = await geocodeLocation(searchLocation);
+        if (coordinates) {
+          setMapCenter(coordinates);
+        }
+        setIsSearching(false);
+      }
+    }, 1000); // 1 second debounce
+
+    return () => {
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
+      }
+    };
+  }, [searchLocation]);
 
   const handleActivityClick = (activity: any) => {
     setSelectedActivity(activity);
@@ -192,11 +248,11 @@ const Discover = () => {
       <div className="bg-background border-b border-border p-4 space-y-4">
         {/* Location Search */}
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+          <Search className={`absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 ${isSearching ? 'animate-spin text-primary' : 'text-muted-foreground'}`} />
           <Input
             value={searchLocation}
             onChange={(e) => setSearchLocation(e.target.value)}
-            placeholder="Search location..."
+            placeholder="Search for a city or location..."
             className="pl-10 bg-muted border-0"
           />
           <Button
@@ -230,11 +286,12 @@ const Discover = () => {
       {/* Map Container */}
       <div className="relative flex-1" style={{ height: 'calc(100vh - 200px)' }}>
         <MapContainer
-          center={[53.8008, -1.5491]} // Leeds coordinates
+          center={mapCenter}
           zoom={12}
           className="w-full h-full"
           style={{ borderRadius: '0' }}
         >
+          <MapUpdater center={mapCenter} />
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
