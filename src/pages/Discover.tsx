@@ -6,6 +6,17 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import BottomNav from '@/components/BottomNav';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
+
+// Fix leaflet default markers
+delete (L.Icon.Default.prototype as any)._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
+  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+});
 
 // Mock kid-friendly activity data with Leeds locations
 const mockActivities = [
@@ -218,47 +229,44 @@ const Discover = () => {
 
       {/* Map Container */}
       <div className="relative flex-1" style={{ height: 'calc(100vh - 200px)' }}>
-        <div className="w-full h-full bg-muted flex flex-col items-center justify-center relative">
-          {/* Map Header */}
-          <div className="text-center space-y-4 z-10">
-            <div className="text-6xl">🗺️</div>
-            <div className="text-lg font-semibold">Leeds Kids Activities Map</div>
-            <div className="text-sm text-muted-foreground">Tap the icons to explore activities</div>
-          </div>
-          
-          {/* Activity Markers Grid */}
-          <div className="absolute inset-0 grid grid-cols-3 grid-rows-3 gap-4 p-8">
-            {filteredActivities.map((activity, index) => {
-              const categoryIcon = categoryIcons[activity.category as keyof typeof categoryIcons] || '📍';
-              const positions = [
-                'col-start-1 row-start-1', 
-                'col-start-3 row-start-1', 
-                'col-start-2 row-start-2',
-                'col-start-1 row-start-3', 
-                'col-start-3 row-start-3', 
-                'col-start-2 row-start-1'
-              ];
-              const position = positions[index % positions.length];
-              
-              return (
-                <div 
-                  key={activity.id}
-                  className={`flex justify-center items-center ${position}`}
-                >
-                  <div 
-                    className="bg-background border border-border rounded-full w-12 h-12 flex items-center justify-center shadow-lg cursor-pointer hover:scale-110 transition-transform"
-                    onClick={() => handleActivityClick(activity)}
-                  >
-                    <span className="text-lg">{categoryIcon}</span>
+        <MapContainer
+          center={[53.8008, -1.5491]} // Leeds coordinates
+          zoom={12}
+          className="w-full h-full"
+          style={{ borderRadius: '0' }}
+        >
+          <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          />
+          {filteredActivities.map((activity) => (
+            <Marker
+              key={activity.id}
+              position={[activity.coordinates[1], activity.coordinates[0]]}
+            >
+              <Popup>
+                <div className="p-2 min-w-[200px]">
+                  <h3 className="font-semibold text-sm mb-1">{activity.title}</h3>
+                  <p className="text-xs text-gray-600 mb-2">{activity.location}</p>
+                  <p className="text-xs mb-2">{activity.description}</p>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-medium">£{activity.price}</span>
+                    <span className="text-xs">★ {activity.rating} ({activity.reviews})</span>
                   </div>
+                  <button
+                    onClick={() => handleActivityClick(activity)}
+                    className="w-full bg-blue-500 text-white text-xs py-1 px-2 rounded hover:bg-blue-600 transition-colors"
+                  >
+                    View Details
+                  </button>
                 </div>
-              );
-            })}
-          </div>
-        </div>
+              </Popup>
+            </Marker>
+          ))}
+        </MapContainer>
         
         {/* Activity Count */}
-        <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2">
+        <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 z-[1000]">
           <div className="bg-background/90 backdrop-blur-sm border border-border rounded-full px-4 py-2 shadow-lg">
             <span className="text-sm font-medium">Over 1,000 kids activities in {searchLocation}</span>
           </div>
