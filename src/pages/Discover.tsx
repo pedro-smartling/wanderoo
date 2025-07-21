@@ -154,6 +154,26 @@ const geocodeLocation = async (location: string): Promise<[number, number] | nul
   }
 };
 
+// Function to get city suggestions for autocomplete
+const getCitySuggestions = async (query: string): Promise<Array<{name: string, display: string}>> => {
+  if (!query.trim() || query.length < 2) return [];
+  
+  try {
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=5&addressdetails=1&extratags=1&namedetails=1&type=city,town,village`
+    );
+    const data = await response.json();
+    
+    return data.map((item: any) => ({
+      name: item.name || item.display_name.split(',')[0],
+      display: item.display_name
+    }));
+  } catch (error) {
+    console.error('City suggestions error:', error);
+    return [];
+  }
+};
+
 const Discover = () => {
   const [selectedActivity, setSelectedActivity] = useState<any>(null);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
@@ -162,7 +182,10 @@ const Discover = () => {
   const [filteredActivities, setFilteredActivities] = useState(mockActivities);
   const [mapCenter, setMapCenter] = useState<[number, number]>([53.8008, -1.5491]); // Leeds coordinates
   const [isSearching, setIsSearching] = useState(false);
+  const [citySuggestions, setCitySuggestions] = useState<Array<{name: string, display: string}>>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
   const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const suggestionTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     const filtered = selectedCategory === 'All' 
@@ -194,6 +217,47 @@ const Discover = () => {
       }
     };
   }, [searchLocation]);
+
+  // Effect to handle autocomplete suggestions with debouncing
+  useEffect(() => {
+    if (suggestionTimeoutRef.current) {
+      clearTimeout(suggestionTimeoutRef.current);
+    }
+
+    suggestionTimeoutRef.current = setTimeout(async () => {
+      if (searchLocation.trim() && searchLocation.length >= 2) {
+        const suggestions = await getCitySuggestions(searchLocation);
+        setCitySuggestions(suggestions);
+        setShowSuggestions(suggestions.length > 0);
+      } else {
+        setCitySuggestions([]);
+        setShowSuggestions(false);
+      }
+    }, 300); // Shorter debounce for suggestions
+
+    return () => {
+      if (suggestionTimeoutRef.current) {
+        clearTimeout(suggestionTimeoutRef.current);
+      }
+    };
+  }, [searchLocation]);
+
+  const handleSuggestionClick = (suggestion: {name: string, display: string}) => {
+    setSearchLocation(suggestion.name);
+    setShowSuggestions(false);
+    setCitySuggestions([]);
+  };
+
+  const handleSearchFocus = () => {
+    if (citySuggestions.length > 0) {
+      setShowSuggestions(true);
+    }
+  };
+
+  const handleSearchBlur = () => {
+    // Delay hiding suggestions to allow click events
+    setTimeout(() => setShowSuggestions(false), 200);
+  };
 
   const handleActivityClick = (activity: any) => {
     setSelectedActivity(activity);
@@ -252,6 +316,8 @@ const Discover = () => {
           <Input
             value={searchLocation}
             onChange={(e) => setSearchLocation(e.target.value)}
+            onFocus={handleSearchFocus}
+            onBlur={handleSearchBlur}
             placeholder="Search for a city or location..."
             className="pl-10 bg-muted border-0"
           />
@@ -262,6 +328,22 @@ const Discover = () => {
           >
             <Filter className="h-4 w-4" />
           </Button>
+          
+          {/* Autocomplete Suggestions Dropdown */}
+          {showSuggestions && citySuggestions.length > 0 && (
+            <div className="absolute top-full left-0 right-0 z-50 mt-1 bg-background border border-border rounded-lg shadow-lg max-h-60 overflow-y-auto">
+              {citySuggestions.map((suggestion, index) => (
+                <div
+                  key={index}
+                  className="px-4 py-3 cursor-pointer hover:bg-muted transition-colors border-b border-border last:border-b-0"
+                  onClick={() => handleSuggestionClick(suggestion)}
+                >
+                  <div className="font-medium text-sm">{suggestion.name}</div>
+                  <div className="text-xs text-muted-foreground truncate">{suggestion.display}</div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Category Filters */}
