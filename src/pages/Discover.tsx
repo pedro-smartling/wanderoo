@@ -331,7 +331,7 @@ const Discover = () => {
           
           {/* Autocomplete Suggestions Dropdown */}
           {showSuggestions && citySuggestions.length > 0 && (
-            <div className="absolute top-full left-0 right-0 z-50 mt-1 bg-background border border-border rounded-lg shadow-lg max-h-60 overflow-y-auto">
+            <div className="absolute top-full left-0 right-0 z-[9999] mt-1 bg-background border border-border rounded-lg shadow-lg max-h-60 overflow-y-auto">
               {citySuggestions.map((suggestion, index) => (
                 <div
                   key={index}
