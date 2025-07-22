@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { MessageCircle } from 'lucide-react';
 import WelcomeHeader from '@/components/WelcomeHeader';
 import CategoryFilters from '@/components/CategoryFilters';
 import WanderoSlotMachine from '@/components/WanderoSlotMachine';
 import BottomNav from '@/components/BottomNav';
 import ActivityCard from '@/components/ActivityCard';
+import { Button } from '@/components/ui/button';
 
 interface Activity {
   id: string;
@@ -20,6 +23,7 @@ interface Activity {
 }
 
 const Index = () => {
+  const navigate = useNavigate();
   const [activeFilters, setActiveFilters] = useState<string[]>(['outdoors']);
   const [selectedActivity, setSelectedActivity] = useState<Activity | null>(null);
   const [likedActivities, setLikedActivities] = useState<Activity[]>([]);
@@ -186,6 +190,15 @@ const Index = () => {
           onTabChange={setActiveTab}
         />
       </div>
+
+      {/* Floating AI Chat Button */}
+      <Button
+        onClick={() => navigate('/chat')}
+        size="icon"
+        className="fixed bottom-24 right-6 z-50 h-14 w-14 rounded-full bg-primary hover:bg-primary/90 shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105"
+      >
+        <MessageCircle className="h-6 w-6 text-primary-foreground" />
+      </Button>
     </div>
   );
 };
