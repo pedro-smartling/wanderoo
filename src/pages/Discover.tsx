@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import BottomNav from '@/components/BottomNav';
+import { ActivityScraper } from '@/components/ActivityScraper';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
@@ -466,6 +467,11 @@ const Discover = () => {
           )}
         </SheetContent>
       </Sheet>
+
+      {/* Activity Scraper Component */}
+      <div className="p-4">
+        <ActivityScraper />
+      </div>
 
       {/* Bottom Navigation */}
       <BottomNav />
