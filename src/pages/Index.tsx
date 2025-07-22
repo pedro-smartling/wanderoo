@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MessageCircle } from 'lucide-react';
 import WelcomeHeader from '@/components/WelcomeHeader';
 import CategoryFilters from '@/components/CategoryFilters';
 import WanderoSlotMachine from '@/components/WanderoSlotMachine';
@@ -191,14 +190,6 @@ const Index = () => {
         />
       </div>
 
-      {/* Floating AI Chat Button */}
-      <Button
-        onClick={() => navigate('/chat')}
-        size="icon"
-        className="fixed bottom-6 right-6 z-[9999] h-14 w-14 rounded-full bg-primary hover:bg-primary/90 shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105"
-      >
-        <MessageCircle className="h-6 w-6 text-primary-foreground" />
-      </Button>
     </div>
   );
 };
