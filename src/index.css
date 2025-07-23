@@ -162,15 +162,5 @@
       border: 1px solid hsl(var(--border));
     }
     
-    #root::before {
-      content: "";
-      position: fixed;
-      top: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      @apply bg-card text-card-foreground px-4 py-2 rounded-full text-sm;
-      content: "📱 Mobile App View";
-      z-index: 1000;
-    }
   }
 }
