@@ -303,10 +303,7 @@ const Discover = () => {
           description: "Failed to fetch activities for this location",
           variant: "destructive",
         });
-        return;
-      }
-
-      if (data?.success) {
+      } else if (data?.success) {
         toast({
           title: "Success",
           description: `Found ${data.eventsAdded || 0} new activities in ${location}`,
