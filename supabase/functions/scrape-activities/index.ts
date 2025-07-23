@@ -18,6 +18,29 @@ interface ScrapedActivity {
   organizer: string
   image_url?: string
   tags: string[]
+  latitude?: number
+  longitude?: number
+}
+
+// Geocoding function using OpenStreetMap Nominatim API
+async function geocodeLocation(location: string): Promise<{ lat: number, lng: number } | null> {
+  try {
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(location)}&limit=1`
+    );
+    const data = await response.json();
+    
+    if (data && data.length > 0) {
+      return {
+        lat: parseFloat(data[0].lat),
+        lng: parseFloat(data[0].lon)
+      };
+    }
+    return null;
+  } catch (error) {
+    console.error('Geocoding error:', error);
+    return null;
+  }
 }
 
 async function scrapeEventbrite(location: string, category: string): Promise<ScrapedActivity[]> {
@@ -213,8 +236,8 @@ Deno.serve(async (req) => {
 
   try {
     const supabaseClient = createClient(
-      'https://iurpdcgvydcoaetphgpw.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml1cnBkY2d2eWRjb2FldHBoZ3B3Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1Mjg3NzQwNSwiZXhwIjoyMDY4NDUzNDA1fQ.ZMdT_PVqLcPxKCKyP7WC3jQGvGLHLLOcMoXFSo0fv0Y'
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     )
 
     const { location = 'New York', category = 'general', sources = ['eventbrite', 'meetup'] } = await req.json()
