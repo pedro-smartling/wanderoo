@@ -86,7 +86,9 @@ export type Database = {
           external_url: string | null
           id: string
           image_url: string | null
+          latitude: number | null
           location: string | null
+          longitude: number | null
           max_participants: number | null
           organizer: string | null
           price: number | null
@@ -107,7 +109,9 @@ export type Database = {
           external_url?: string | null
           id?: string
           image_url?: string | null
+          latitude?: number | null
           location?: string | null
+          longitude?: number | null
           max_participants?: number | null
           organizer?: string | null
           price?: number | null
@@ -128,7 +132,9 @@ export type Database = {
           external_url?: string | null
           id?: string
           image_url?: string | null
+          latitude?: number | null
           location?: string | null
+          longitude?: number | null
           max_participants?: number | null
           organizer?: string | null
           price?: number | null
