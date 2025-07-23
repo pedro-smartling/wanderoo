@@ -268,13 +268,40 @@ Deno.serve(async (req) => {
       // Add coordinates to activities
       const activitiesWithCoords = await Promise.all(
         allActivities.map(async (activity) => {
-          // Try to geocode the activity location
-          const coords = await geocodeLocation(activity.location);
+          // Try to geocode the specific activity location, fall back to general location
+          let locationToGeocode = activity.location;
+          
+          // If activity location is too generic or missing, use the search location
+          if (!locationToGeocode || locationToGeocode.length < 3 || locationToGeocode === location) {
+            locationToGeocode = location;
+          }
+          
+          console.log(`Geocoding activity "${activity.title}" at location: "${locationToGeocode}"`);
+          const coords = await geocodeLocation(locationToGeocode);
+          
+          if (coords) {
+            console.log(`Successfully geocoded "${locationToGeocode}" to:`, coords);
+          } else {
+            console.log(`Failed to geocode "${locationToGeocode}", using fallback coordinates`);
+            // Fallback: try to geocode just the search location
+            const fallbackCoords = await geocodeLocation(location);
+            if (fallbackCoords) {
+              console.log(`Using fallback coordinates for ${location}:`, fallbackCoords);
+            }
+            return {
+              ...activity,
+              latitude: fallbackCoords?.lat || null,
+              longitude: fallbackCoords?.lng || null,
+              source: 'scraped',
+              created_at: new Date().toISOString(),
+              updated_at: new Date().toISOString(),
+            };
+          }
           
           return {
             ...activity,
-            latitude: coords?.lat || null,
-            longitude: coords?.lng || null,
+            latitude: coords.lat,
+            longitude: coords.lng,
             source: 'scraped',
             created_at: new Date().toISOString(),
             updated_at: new Date().toISOString(),
