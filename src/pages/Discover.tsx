@@ -222,16 +222,13 @@ const Discover = () => {
       if (events && events.length > 0) {
         console.log('Found events in database:', events.length);
         
-        // Transform database events to match the expected format and geocode their locations
-        const transformedActivities = await Promise.all(events.map(async (event) => {
+        // Transform database events to match the expected format and use their coordinates
+        const transformedActivities = events.map(event => {
+          // Use database coordinates if available, otherwise geocode the location
           let coordinates = [-1.5491, 53.8008]; // Default to Leeds coordinates
           
-          // Try to geocode the location if it exists
-          if (event.location) {
-            const geocoded = await geocodeLocation(event.location);
-            if (geocoded) {
-              coordinates = [geocoded[1], geocoded[0]]; // [lng, lat] format for leaflet
-            }
+          if (event.latitude && event.longitude) {
+            coordinates = [event.longitude, event.latitude]; // [lng, lat] format for leaflet
           }
           
           return {
@@ -253,10 +250,10 @@ const Discover = () => {
             description: event.description || 'Fun activity for kids',
             ageRange: event.age_group || '3-12'
           };
-        }));
+        });
 
         setRealActivities(transformedActivities);
-        console.log('Loaded and geocoded activities:', transformedActivities.length);
+        console.log('Loaded activities with coordinates:', transformedActivities.map(a => ({ title: a.title, coordinates: a.coordinates })));
       } else {
         console.log('No events found in database');
         setRealActivities([]);

@@ -263,20 +263,29 @@ Deno.serve(async (req) => {
     
     console.log('Total activities found:', allActivities.length)
     
-    // Save to database
+    // Save to database with geocoding
     if (allActivities.length > 0) {
-      // Prepare data for insertion
-      const activitiesData = allActivities.map(activity => ({
-        ...activity,
-        source: 'scraped',
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      }))
+      // Add coordinates to activities
+      const activitiesWithCoords = await Promise.all(
+        allActivities.map(async (activity) => {
+          // Try to geocode the activity location
+          const coords = await geocodeLocation(activity.location);
+          
+          return {
+            ...activity,
+            latitude: coords?.lat || null,
+            longitude: coords?.lng || null,
+            source: 'scraped',
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          };
+        })
+      );
       
       // Insert into events table
       const { data: insertedData, error: insertError } = await supabaseClient
         .from('events')
-        .upsert(activitiesData, { 
+        .upsert(activitiesWithCoords, { 
           onConflict: 'external_url',
           ignoreDuplicates: true 
         })
@@ -304,6 +313,7 @@ Deno.serve(async (req) => {
           success: true, 
           activities: allActivities,
           inserted: insertedData?.length || 0,
+          eventsAdded: insertedData?.length || 0,
           message: `Successfully scraped and saved ${allActivities.length} activities`
         }),
         { 
