@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, MapPin, Filter } from 'lucide-react';
+import { Search, MapPin, Filter, Loader2 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -8,6 +8,8 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sh
 import BottomNav from '@/components/BottomNav';
 import { ActivityScraper } from '@/components/ActivityScraper';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/components/ui/use-toast';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 
@@ -181,21 +183,72 @@ const Discover = () => {
   const [searchLocation, setSearchLocation] = useState('Leeds');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [filteredActivities, setFilteredActivities] = useState(mockActivities);
+  const [realActivities, setRealActivities] = useState<any[]>([]);
   const [mapCenter, setMapCenter] = useState<[number, number]>([53.8008, -1.5491]); // Leeds coordinates
   const [isSearching, setIsSearching] = useState(false);
+  const [isLoadingActivities, setIsLoadingActivities] = useState(false);
   const [citySuggestions, setCitySuggestions] = useState<Array<{name: string, display: string}>>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const suggestionTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const { toast } = useToast();
 
+  // Load activities from database on component mount
   useEffect(() => {
-    const filtered = selectedCategory === 'All' 
-      ? mockActivities 
-      : mockActivities.filter(activity => activity.category === selectedCategory);
-    setFilteredActivities(filtered);
-  }, [selectedCategory]);
+    loadActivitiesFromDatabase();
+  }, []);
 
-  // Effect to handle location search with debouncing
+  // Filter activities when category changes
+  useEffect(() => {
+    const allActivities = [...mockActivities, ...realActivities];
+    const filtered = selectedCategory === 'All' 
+      ? allActivities 
+      : allActivities.filter(activity => activity.category === selectedCategory);
+    setFilteredActivities(filtered);
+  }, [selectedCategory, realActivities]);
+
+  const loadActivitiesFromDatabase = async () => {
+    try {
+      const { data: events, error } = await supabase
+        .from('events')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error('Error loading activities:', error);
+        return;
+      }
+
+      if (events) {
+        // Transform database events to match the expected format
+        const transformedActivities = events.map(event => ({
+          id: event.id,
+          title: event.title,
+          category: event.category,
+          price: event.price || 0,
+          rating: 4.5, // Default rating
+          reviews: Math.floor(Math.random() * 100) + 10, // Random reviews for demo
+          location: event.location || 'Location TBD',
+          coordinates: [-1.5491, 53.8008], // Default to Leeds coordinates
+          image: event.image_url || 'https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0',
+          duration: event.duration_minutes ? `${event.duration_minutes} minutes` : '1 hour',
+          time: event.date_time ? new Date(event.date_time).toLocaleTimeString('en-US', { 
+            hour: 'numeric', 
+            minute: '2-digit',
+            hour12: true 
+          }) : '10:00 AM',
+          description: event.description || 'Fun activity for kids',
+          ageRange: event.age_group || '3-12'
+        }));
+
+        setRealActivities(transformedActivities);
+      }
+    } catch (error) {
+      console.error('Error loading activities:', error);
+    }
+  };
+
+  // Effect to handle location search with debouncing and activity fetching
   useEffect(() => {
     if (searchTimeoutRef.current) {
       clearTimeout(searchTimeoutRef.current);
@@ -207,6 +260,8 @@ const Discover = () => {
         const coordinates = await geocodeLocation(searchLocation);
         if (coordinates) {
           setMapCenter(coordinates);
+          // Fetch activities for the new location
+          await fetchActivitiesForLocation(searchLocation);
         }
         setIsSearching(false);
       }
@@ -218,6 +273,43 @@ const Discover = () => {
       }
     };
   }, [searchLocation]);
+
+  const fetchActivitiesForLocation = async (location: string) => {
+    setIsLoadingActivities(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('scrape-activities', {
+        body: { location }
+      });
+
+      if (error) {
+        console.error('Error fetching activities:', error);
+        toast({
+          title: "Error",
+          description: "Failed to fetch activities for this location",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      if (data?.success) {
+        toast({
+          title: "Success",
+          description: `Found ${data.eventsAdded || 0} new activities in ${location}`,
+        });
+        // Reload activities from database to get the new ones
+        await loadActivitiesFromDatabase();
+      }
+    } catch (error) {
+      console.error('Error calling scrape function:', error);
+      toast({
+        title: "Error",
+        description: "Failed to fetch activities for this location",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoadingActivities(false);
+    }
+  };
 
   // Effect to handle autocomplete suggestions with debouncing
   useEffect(() => {
@@ -313,7 +405,11 @@ const Discover = () => {
       <div className="bg-background border-b border-border p-4 space-y-4">
         {/* Location Search */}
         <div className="relative">
-          <Search className={`absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 ${isSearching ? 'animate-spin text-primary' : 'text-muted-foreground'}`} />
+          {isSearching || isLoadingActivities ? (
+            <Loader2 className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 animate-spin text-primary" />
+          ) : (
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          )}
           <Input
             value={searchLocation}
             onChange={(e) => setSearchLocation(e.target.value)}
@@ -321,6 +417,7 @@ const Discover = () => {
             onBlur={handleSearchBlur}
             placeholder="Search for a city or location..."
             className="pl-10 bg-muted border-0"
+            disabled={isSearching || isLoadingActivities}
           />
           <Button
             variant="ghost"
@@ -405,10 +502,19 @@ const Discover = () => {
           ))}
         </MapContainer>
         
-        {/* Activity Count */}
+        {/* Activity Count & Status */}
         <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 z-[1000]">
           <div className="bg-background/90 backdrop-blur-sm border border-border rounded-full px-4 py-2 shadow-lg">
-            <span className="text-sm font-medium">Over 1,000 kids activities in {searchLocation}</span>
+            {isLoadingActivities ? (
+              <div className="flex items-center gap-2">
+                <Loader2 className="h-4 w-4 animate-spin" />
+                <span className="text-sm font-medium">Finding activities in {searchLocation}...</span>
+              </div>
+            ) : (
+              <span className="text-sm font-medium">
+                {filteredActivities.length} activities in {searchLocation}
+              </span>
+            )}
           </div>
         </div>
       </div>
