@@ -22,8 +22,40 @@ interface ScrapedActivity {
   longitude?: number
 }
 
-// Geocoding function using OpenStreetMap Nominatim API with better error handling
+// Common city coordinates as fallback
+const CITY_COORDINATES: Record<string, { lat: number, lng: number }> = {
+  'lisbon': { lat: 38.7223, lng: -9.1393 },
+  'lisboa': { lat: 38.7223, lng: -9.1393 },
+  'leeds': { lat: 53.8008, lng: -1.5491 },
+  'london': { lat: 51.5074, lng: -0.1278 },
+  'manchester': { lat: 53.4808, lng: -2.2426 },
+  'birmingham': { lat: 52.4862, lng: -1.8904 },
+  'glasgow': { lat: 55.8642, lng: -4.2518 },
+  'edinburgh': { lat: 55.9533, lng: -3.1883 },
+  'cardiff': { lat: 51.4816, lng: -3.1791 },
+  'bristol': { lat: 51.4545, lng: -2.5879 },
+  'liverpool': { lat: 53.4084, lng: -2.9916 },
+  'newcastle': { lat: 54.9783, lng: -1.6178 },
+  'york': { lat: 53.9600, lng: -1.0873 },
+  'paris': { lat: 48.8566, lng: 2.3522 },
+  'madrid': { lat: 40.4168, lng: -3.7038 },
+  'barcelona': { lat: 41.3851, lng: 2.1734 },
+  'rome': { lat: 41.9028, lng: 12.4964 },
+  'milan': { lat: 45.4642, lng: 9.1900 },
+  'berlin': { lat: 52.5200, lng: 13.4050 },
+  'amsterdam': { lat: 52.3676, lng: 4.9041 },
+  'brussels': { lat: 50.8503, lng: 4.3517 }
+};
+
+// Geocoding function with fallback to hardcoded coordinates
 async function geocodeLocation(location: string): Promise<{ lat: number, lng: number } | null> {
+  // First check if we have hardcoded coordinates for this city
+  const cleanLocation = location.toLowerCase().trim();
+  if (CITY_COORDINATES[cleanLocation]) {
+    console.log(`Using hardcoded coordinates for ${location}:`, CITY_COORDINATES[cleanLocation]);
+    return CITY_COORDINATES[cleanLocation];
+  }
+  
   try {
     const response = await fetch(
       `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(location)}&limit=1&addressdetails=1`,
@@ -37,7 +69,14 @@ async function geocodeLocation(location: string): Promise<{ lat: number, lng: nu
     // Check if response is actually JSON
     const contentType = response.headers.get('content-type');
     if (!contentType || !contentType.includes('application/json')) {
-      console.log('Geocoding response is not JSON, probably rate limited');
+      console.log('Geocoding response is not JSON, trying fallback for:', location);
+      // Try partial matches in our hardcoded list
+      for (const [city, coords] of Object.entries(CITY_COORDINATES)) {
+        if (cleanLocation.includes(city) || city.includes(cleanLocation)) {
+          console.log(`Found partial match ${city} for ${location}`);
+          return coords;
+        }
+      }
       return null;
     }
     
@@ -49,10 +88,12 @@ async function geocodeLocation(location: string): Promise<{ lat: number, lng: nu
     const data = await response.json();
     
     if (data && data.length > 0) {
-      return {
+      const result = {
         lat: parseFloat(data[0].lat),
         lng: parseFloat(data[0].lon)
       };
+      console.log(`Successfully geocoded ${location}:`, result);
+      return result;
     }
     return null;
   } catch (error) {
