@@ -219,29 +219,47 @@ const Discover = () => {
         return;
       }
 
-      if (events) {
-        // Transform database events to match the expected format
-        const transformedActivities = events.map(event => ({
-          id: event.id,
-          title: event.title,
-          category: event.category,
-          price: event.price || 0,
-          rating: 4.5, // Default rating
-          reviews: Math.floor(Math.random() * 100) + 10, // Random reviews for demo
-          location: event.location || 'Location TBD',
-          coordinates: [-1.5491, 53.8008], // Default to Leeds coordinates
-          image: event.image_url || 'https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0',
-          duration: event.duration_minutes ? `${event.duration_minutes} minutes` : '1 hour',
-          time: event.date_time ? new Date(event.date_time).toLocaleTimeString('en-US', { 
-            hour: 'numeric', 
-            minute: '2-digit',
-            hour12: true 
-          }) : '10:00 AM',
-          description: event.description || 'Fun activity for kids',
-          ageRange: event.age_group || '3-12'
+      if (events && events.length > 0) {
+        console.log('Found events in database:', events.length);
+        
+        // Transform database events to match the expected format and geocode their locations
+        const transformedActivities = await Promise.all(events.map(async (event) => {
+          let coordinates = [-1.5491, 53.8008]; // Default to Leeds coordinates
+          
+          // Try to geocode the location if it exists
+          if (event.location) {
+            const geocoded = await geocodeLocation(event.location);
+            if (geocoded) {
+              coordinates = [geocoded[1], geocoded[0]]; // [lng, lat] format for leaflet
+            }
+          }
+          
+          return {
+            id: event.id,
+            title: event.title,
+            category: event.category,
+            price: event.price || 0,
+            rating: 4.5, // Default rating
+            reviews: Math.floor(Math.random() * 100) + 10, // Random reviews for demo
+            location: event.location || 'Location TBD',
+            coordinates,
+            image: event.image_url || 'https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0',
+            duration: event.duration_minutes ? `${event.duration_minutes} minutes` : '1 hour',
+            time: event.date_time ? new Date(event.date_time).toLocaleTimeString('en-US', { 
+              hour: 'numeric', 
+              minute: '2-digit',
+              hour12: true 
+            }) : '10:00 AM',
+            description: event.description || 'Fun activity for kids',
+            ageRange: event.age_group || '3-12'
+          };
         }));
 
         setRealActivities(transformedActivities);
+        console.log('Loaded and geocoded activities:', transformedActivities.length);
+      } else {
+        console.log('No events found in database');
+        setRealActivities([]);
       }
     } catch (error) {
       console.error('Error loading activities:', error);
@@ -476,30 +494,33 @@ const Discover = () => {
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
-          {filteredActivities.map((activity) => (
-            <Marker
-              key={activity.id}
-              position={[activity.coordinates[1], activity.coordinates[0]]}
-            >
-              <Popup>
-                <div className="p-2 min-w-[200px]">
-                  <h3 className="font-semibold text-sm mb-1">{activity.title}</h3>
-                  <p className="text-xs text-gray-600 mb-2">{activity.location}</p>
-                  <p className="text-xs mb-2">{activity.description}</p>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium">£{activity.price}</span>
-                    <span className="text-xs">★ {activity.rating} ({activity.reviews})</span>
-                  </div>
-                  <button
-                    onClick={() => handleActivityClick(activity)}
-                    className="w-full bg-blue-500 text-white text-xs py-1 px-2 rounded hover:bg-blue-600 transition-colors"
-                  >
+          {filteredActivities.map((activity) => {
+            console.log('Rendering marker for activity:', activity.title, 'at coordinates:', activity.coordinates);
+            return (
+              <Marker
+                key={activity.id}
+                position={[activity.coordinates[1], activity.coordinates[0]]}
+              >
+                <Popup>
+                  <div className="p-2 min-w-[200px]">
+                    <h3 className="font-semibold text-sm mb-1">{activity.title}</h3>
+                    <p className="text-xs text-gray-600 mb-2">{activity.location}</p>
+                    <p className="text-xs mb-2">{activity.description}</p>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm font-medium">£{activity.price}</span>
+                      <span className="text-xs">★ {activity.rating} ({activity.reviews})</span>
+                    </div>
+                    <button
+                      onClick={() => handleActivityClick(activity)}
+                      className="w-full bg-blue-500 text-white text-xs py-1 px-2 rounded hover:bg-blue-600 transition-colors"
+                    >
                     View Details
                   </button>
                 </div>
               </Popup>
             </Marker>
-          ))}
+            );
+          })}
         </MapContainer>
         
         {/* Activity Count & Status */}
