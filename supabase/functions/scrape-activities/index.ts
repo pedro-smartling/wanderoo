@@ -22,12 +22,30 @@ interface ScrapedActivity {
   longitude?: number
 }
 
-// Geocoding function using OpenStreetMap Nominatim API
+// Geocoding function using OpenStreetMap Nominatim API with better error handling
 async function geocodeLocation(location: string): Promise<{ lat: number, lng: number } | null> {
   try {
     const response = await fetch(
-      `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(location)}&limit=1`
+      `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(location)}&limit=1&addressdetails=1`,
+      {
+        headers: {
+          'User-Agent': 'WanderoApp/1.0'
+        }
+      }
     );
+    
+    // Check if response is actually JSON
+    const contentType = response.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+      console.log('Geocoding response is not JSON, probably rate limited');
+      return null;
+    }
+    
+    if (!response.ok) {
+      console.log('Geocoding response not ok:', response.status);
+      return null;
+    }
+    
     const data = await response.json();
     
     if (data && data.length > 0) {
