@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
-import { Shuffle, Heart, Calendar } from 'lucide-react';
+import { RotateCcw, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
 
 interface Activity {
   id: string;
@@ -233,10 +231,19 @@ const WanderoSlotMachine: React.FC<WanderoSlotMachineProps> = ({
     setSpinning(true);
     onSpin();
 
+    // Animate the slot machine emojis
+    const intervals: NodeJS.Timeout[] = [];
+    for (let i = 0; i < 8; i++) {
+      const interval = setTimeout(() => {
+        setSlotEmojis(getRandomEmojis());
+      }, i * 200);
+      intervals.push(interval);
+    }
+
     setTimeout(() => {
+      intervals.forEach(clearTimeout);
       const activities = getFilteredActivities();
       if (activities.length === 0) {
-        // Fallback to all activities if no filters match
         const allActivities = Object.values(ACTIVITIES).flat();
         const newSlots = [
           allActivities[Math.floor(Math.random() * allActivities.length)],
@@ -245,7 +252,6 @@ const WanderoSlotMachine: React.FC<WanderoSlotMachineProps> = ({
         ];
         setSlots(newSlots);
       } else {
-        // Ensure we get different activities for each slot
         const newSlots = [];
         for (let i = 0; i < 3; i++) {
           let randomActivity;
@@ -263,195 +269,107 @@ const WanderoSlotMachine: React.FC<WanderoSlotMachineProps> = ({
     }, 1500);
   };
 
-  const SlotCard: React.FC<{ activity: Activity; label: string; isSpinning: boolean }> = ({ 
-    activity, 
-    label, 
-    isSpinning 
-  }) => (
-    <div 
-      className={`bg-background border-2 rounded-2xl p-3 text-center transition-all duration-300 cursor-pointer relative overflow-hidden ${
-        isSpinning 
-          ? 'animate-pulse scale-105 border-primary/50 shadow-lg' 
-          : 'hover:shadow-md hover:scale-105 border-border/50 hover:border-primary/30'
-      }`}
-      onClick={() => !isSpinning && onActivitySelect([activity])}
-    >
-      {/* Slot machine reel effect */}
-      <div className={`absolute inset-0 bg-gradient-to-b from-transparent via-primary/5 to-transparent transition-opacity duration-300 ${
-        isSpinning ? 'opacity-100' : 'opacity-0'
-      }`}></div>
-      
-      <div className="relative z-10">
-        <div className="text-xs font-bold text-primary mb-2 uppercase tracking-wider">
-          {label}
-        </div>
-        <div className={`text-3xl mb-2 transition-all duration-500 ${
-          isSpinning ? 'animate-bounce scale-110' : 'hover:scale-110'
-        }`}>
-          {isSpinning ? '🎰' : activity.icon}
-        </div>
-        <h3 className="font-bold text-xs mb-1 line-clamp-2 min-h-[2rem]">{activity.title}</h3>
-        <p className="text-xs text-muted-foreground font-medium">{activity.time}</p>
-        
-        {/* Difficulty badge */}
-        <div className={`absolute -top-1 -right-1 w-3 h-3 rounded-full ${
-          activity.difficulty === 'Easy' ? 'bg-green-500' :
-          activity.difficulty === 'Medium' ? 'bg-yellow-500' : 'bg-red-500'
-        }`}></div>
-      </div>
-    </div>
-  );
+  // Generate random emoji icons for the slot machine
+  const getRandomEmojis = () => {
+    const emojis = ['🏀', '🥾', '🌲', '🍿', '🎵', '🎨', '🎭', '🏊', '🎪', '🎯', '🎲', '🎸'];
+    return Array.from({ length: 12 }, () => emojis[Math.floor(Math.random() * emojis.length)]);
+  };
 
-  const progressValue = (spinCount % 5) * 20;
+  const [slotEmojis, setSlotEmojis] = useState(getRandomEmojis());
 
   return (
-    <div className="space-y-8 pb-8">
-      {/* Hero Section */}
-      <div className="relative bg-gradient-to-br from-primary/10 via-primary/5 to-background rounded-3xl mx-4 p-6 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-transparent opacity-50"></div>
-        <div className="relative z-10 text-center">
-          <div className="text-6xl mb-4 animate-bounce">🎰</div>
-          <h1 className="text-3xl font-bold mb-2 bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-            Spin a Day
-          </h1>
-          <p className="text-muted-foreground text-lg">
-            Let chance decide your perfect adventure
-          </p>
-        </div>
-      </div>
-
-      {/* Slot Machine Container */}
-      <div className="relative bg-card border border-border/50 rounded-3xl mx-4 p-6 shadow-lg">
-        {/* Decorative elements */}
-        <div className="absolute top-4 right-4 w-6 h-6 bg-primary/20 rounded-full animate-pulse"></div>
-        <div className="absolute top-8 right-8 w-4 h-4 bg-primary/30 rounded-full animate-pulse delay-300"></div>
+    <div className="min-h-screen bg-gradient-to-b from-[#FF6B35] to-[#FF4500] relative overflow-hidden">
+      {/* Content Container */}
+      <div className="flex flex-col items-center justify-center min-h-screen px-6 py-8 text-center">
         
-        {/* Slot Cards */}
-        <div className="grid grid-cols-3 gap-4 mb-6">
-          <SlotCard 
-            activity={slots[0]} 
-            label="MORNING" 
-            isSpinning={spinning}
-          />
-          <SlotCard 
-            activity={slots[1]} 
-            label="AFTERNOON" 
-            isSpinning={spinning}
-          />
-          <SlotCard 
-            activity={slots[2]} 
-            label="EVENING" 
-            isSpinning={spinning}
-          />
+        {/* Header Text */}
+        <div className="mb-8">
+          <h1 className="text-4xl font-bold text-white mb-2">One tap</h1>
+          <h2 className="text-4xl font-bold text-white">One day sorted!</h2>
+        </div>
+
+        {/* Slot Machine Container */}
+        <div className="relative mb-8">
+          {/* Main slot machine card */}
+          <div className="bg-white rounded-3xl p-6 shadow-2xl relative overflow-hidden w-80 h-96">
+            
+            {/* Top slot card */}
+            <div className="bg-gray-50 rounded-2xl p-4 mb-4 relative overflow-hidden h-32">
+              <div className="grid grid-cols-3 gap-2 h-full">
+                {slotEmojis.slice(0, 6).map((emoji, index) => (
+                  <div 
+                    key={`top-${index}`}
+                    className={`flex items-center justify-center text-2xl transition-transform duration-200 ${
+                      spinning ? 'animate-pulse' : ''
+                    }`}
+                  >
+                    {emoji}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Bottom slot card */}
+            <div className="bg-gray-50 rounded-2xl p-4 relative overflow-hidden h-32">
+              <div className="grid grid-cols-3 gap-2 h-full">
+                {slotEmojis.slice(6, 12).map((emoji, index) => (
+                  <div 
+                    key={`bottom-${index}`}
+                    className={`flex items-center justify-center text-2xl transition-transform duration-200 ${
+                      spinning ? 'animate-pulse' : ''
+                    }`}
+                  >
+                    {emoji}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Slot machine reels overlay effect */}
+            {spinning && (
+              <div className="absolute inset-0 pointer-events-none">
+                <div className="absolute inset-x-0 top-0 h-2 bg-gradient-to-b from-white/80 to-transparent"></div>
+                <div className="absolute inset-x-0 bottom-0 h-2 bg-gradient-to-t from-white/80 to-transparent"></div>
+              </div>
+            )}
+          </div>
+
+          {/* Slot machine handle/decoration */}
+          <div className="absolute -right-4 top-1/2 transform -translate-y-1/2 w-8 h-16 bg-white rounded-r-full shadow-lg"></div>
         </div>
 
         {/* Spin Button */}
         <Button 
           onClick={handleSpin}
           disabled={spinning}
-          className="w-full h-16 bg-gradient-to-r from-primary via-primary to-primary/80 text-primary-foreground font-bold text-xl rounded-2xl shadow-lg hover:shadow-xl transform transition-all duration-200 hover:scale-[1.02] disabled:opacity-70 disabled:scale-100"
+          className="bg-gray-900 hover:bg-gray-800 text-white font-bold text-lg px-8 py-4 rounded-full shadow-xl transition-all duration-200 transform hover:scale-105 disabled:opacity-70 disabled:scale-100 mb-8"
         >
-          <Shuffle className={`mr-3 h-6 w-6 ${spinning ? 'animate-spin' : ''}`} />
-          {spinning ? 'Spinning Magic...' : 'Spin My Day'}
+          <RotateCcw className={`mr-3 h-5 w-5 ${spinning ? 'animate-spin' : ''}`} />
+          SPIN MY DAY
         </Button>
 
-        {/* Results Section */}
+        {/* Results Section - Only show after spinning */}
         {spinCount > 0 && !spinning && (
-          <div className="mt-6 p-4 bg-muted/30 rounded-2xl border">
-            <div className="text-center mb-3">
-              <div className="text-2xl mb-1">✨</div>
-              <h3 className="font-semibold text-lg">Your Adventure Awaits!</h3>
-              <p className="text-sm text-muted-foreground">Review and customize your perfect day</p>
-            </div>
+          <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-4 mb-6">
             <Button 
               variant="secondary" 
-              className="w-full h-12 rounded-xl bg-background/80 hover:bg-background font-medium"
+              className="bg-white text-gray-900 hover:bg-gray-100 font-medium px-6 py-2 rounded-full"
               onClick={() => onActivitySelect(slots.filter(slot => slot !== null))}
             >
-              Review Activities ({slots.filter(slot => slot !== null).length})
+              See Your Perfect Day ({slots.filter(slot => slot !== null).length} activities)
             </Button>
           </div>
         )}
-      </div>
 
-      {/* Quick Actions */}
-      <div className="px-4 space-y-3">
-        <div className="grid grid-cols-2 gap-3">
-          <Button 
-            variant="outline" 
-            className="h-14 rounded-2xl border-2 hover:bg-muted/50 transition-colors"
-            disabled={spinCount === 0}
-          >
-            <Heart className="mr-2 h-5 w-5" />
-            <div className="text-left">
-              <div className="font-medium">Save Combo</div>
-              <div className="text-xs text-muted-foreground">Keep for later</div>
-            </div>
-          </Button>
-          <Button 
-            variant="outline" 
-            className="h-14 rounded-2xl border-2 hover:bg-muted/50 transition-colors"
-            disabled={spinCount === 0}
-            onClick={() => {
-              if (spinCount > 0) {
-                const savedActivities = JSON.parse(localStorage.getItem('approvedActivities') || '[]');
-                const newActivities = slots.map((activity, index) => ({
-                  id: `combo-${activity.id}-${Date.now()}-${index}`,
-                  time: activity.time,
-                  title: activity.title,
-                  description: activity.description,
-                  completed: false,
-                  color: ['yellow', 'blue', 'green'][index] as 'yellow' | 'blue' | 'green',
-                  category: activity.category,
-                  location: activity.location,
-                  duration: activity.duration
-                }));
-                
-                localStorage.setItem('approvedActivities', JSON.stringify([...savedActivities, ...newActivities]));
-              }
-            }}
-          >
-            <Calendar className="mr-2 h-5 w-5" />
-            <div className="text-left">
-              <div className="font-medium">Add to Calendar</div>
-              <div className="text-xs text-muted-foreground">Schedule now</div>
-            </div>
-          </Button>
-        </div>
-      </div>
-
-      {/* Progress Section */}
-      <div className="bg-gradient-to-r from-primary/5 to-primary/10 rounded-3xl p-6 mx-4 border border-primary/20">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center">
-              <span className="text-lg">⭐</span>
-            </div>
-            <h3 className="font-bold text-lg">Golden Spin</h3>
-          </div>
-          <Badge variant="secondary" className="px-3 py-1">
-            {spinCount % 5}/5 spins
-          </Badge>
-        </div>
-        <Progress value={progressValue} className="mb-3 h-2" />
-        <p className="text-sm text-muted-foreground text-center">
-          {5 - (spinCount % 5) === 0 
-            ? "🎉 Golden Spin Ready! Unlock premium activities!" 
-            : `${5 - (spinCount % 5)} more spins until your golden reward`
-          }
-        </p>
-      </div>
-
-      {/* Metadata */}
-      <div className="flex justify-center items-center gap-6 px-4 text-sm text-muted-foreground">
-        <div className="flex items-center gap-1">
-          <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-          <span>Within 30 min</span>
-        </div>
-        <div className="flex items-center gap-1">
-          <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-          <span>Group size: 4</span>
-        </div>
+        {/* Close Button */}
+        <Button 
+          variant="outline" 
+          className="border-2 border-white text-white hover:bg-white hover:text-[#FF6B35] font-semibold px-6 py-3 rounded-full transition-all duration-200"
+          onClick={() => window.history.back()}
+        >
+          <X className="mr-2 h-4 w-4" />
+          CLOSE
+        </Button>
       </div>
     </div>
   );
