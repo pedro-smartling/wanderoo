@@ -31,6 +31,7 @@ const Index = () => {
   const [reviewQueue, setReviewQueue] = useState<Activity[]>([]);
   const [currentReviewIndex, setCurrentReviewIndex] = useState(0);
   const [reviewedActivities, setReviewedActivities] = useState<{activity: Activity, accepted: boolean}[]>([]);
+  const [isSlotMachineActive, setIsSlotMachineActive] = useState(false);
 
   // Mock similar activities for the Tinder-style cards
   const getSimilarActivities = (activity: Activity): Activity[] => {
@@ -76,12 +77,22 @@ const Index = () => {
     );
   };
 
+  const handleSpinClick = () => {
+    setIsSlotMachineActive(true);
+    setSpinCount(prev => prev + 1);
+  };
+
   const handleActivitySelect = (activities: Activity[]) => {
     // Start the review queue with all 3 activities
     setReviewQueue(activities);
     setCurrentReviewIndex(0);
     setReviewedActivities([]);
     setSelectedActivity(activities[0]);
+    setIsSlotMachineActive(false);
+  };
+
+  const handleSlotMachineClose = () => {
+    setIsSlotMachineActive(false);
   };
 
   const handleLike = (activity: Activity, accepted: boolean) => {
@@ -149,6 +160,19 @@ const Index = () => {
     return () => {};
   }, []);
 
+  // If slot machine is active, render only the slot machine
+  if (isSlotMachineActive) {
+    return (
+      <WanderoSlotMachine
+        activeFilters={activeFilters}
+        onSpin={handleSpinClick}
+        onActivitySelect={handleActivitySelect}
+        onClose={handleSlotMachineClose}
+        spinCount={spinCount}
+      />
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background pb-20">
       <div className="max-w-md mx-auto">
@@ -161,13 +185,21 @@ const Index = () => {
           onFilterToggle={handleFilterToggle}
         />
 
-        {/* Wandero Slot Machine */}
-        <WanderoSlotMachine
-          activeFilters={activeFilters}
-          onSpin={() => setSpinCount(prev => prev + 1)}
-          onActivitySelect={handleActivitySelect}
-          spinCount={spinCount}
-        />
+        {/* Spin My Day Button - replaces the slot machine component */}
+        <div className="px-6 py-8">
+          <div className="text-center mb-8">
+            <h2 className="text-2xl font-bold text-primary mb-4">Ready for an Adventure?</h2>
+            <p className="text-muted-foreground mb-6">
+              Spin the wheel and let us create the perfect day for you!
+            </p>
+            <Button
+              onClick={handleSpinClick}
+              className="bg-gradient-to-r from-[#FD9A55] to-[#FF6B35] hover:from-[#FF6B35] hover:to-[#FF4500] text-white font-bold text-lg px-8 py-4 rounded-full shadow-xl transition-all duration-200 transform hover:scale-105"
+            >
+              🎰 SPIN MY DAY
+            </Button>
+          </div>
+        </div>
 
         {/* Activity Detail Card */}
         {selectedActivity && (
@@ -187,6 +219,7 @@ const Index = () => {
         <BottomNav 
           activeTab={activeTab}
           onTabChange={setActiveTab}
+          onSpinClick={handleSpinClick}
         />
       </div>
 

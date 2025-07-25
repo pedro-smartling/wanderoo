@@ -3,6 +3,7 @@ import { ArrowLeft, Calendar as CalendarIcon, Bell, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { useNavigate } from 'react-router-dom';
+import BottomNav from '@/components/BottomNav';
 
 interface ScheduledActivity {
   id: string;
@@ -209,6 +210,9 @@ const Calendar: React.FC = () => {
           ))
         )}
       </div>
+
+      {/* Bottom Navigation */}
+      <BottomNav />
     </div>
   );
 };
