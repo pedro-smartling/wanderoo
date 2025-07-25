@@ -174,7 +174,7 @@ const ActivityCard: React.FC<ActivityCardProps> = ({
             : swipeDirection === 'right' 
               ? 'translate-x-full translate-y-0 rotate-[15deg] opacity-0 scale-95' 
               : 'translate-y-0 opacity-100 scale-100'
-      }`} style={{ zIndex: 1000 }}>
+      }`} style={{ zIndex: 1010 }}>
         <div className={`bg-[#fbf7ef] rounded-t-[24px] shadow-[0px_-6px_16px_0px_rgba(0,0,0,0.12)] h-[70vh] flex flex-col relative transition-all duration-300 ${
           swipeDirection === 'left' 
             ? 'border-4 border-red-400 bg-red-50/90' 
