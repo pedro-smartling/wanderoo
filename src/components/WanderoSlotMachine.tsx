@@ -2,22 +2,10 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { RotateCcw, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Confetti from 'react-confetti';
-
-interface Activity {
-  id: string;
-  title: string;
-  time: string;
-  category: string;
-  icon: string;
-  location: string;
-  duration: string;
-  description: string;
-  image: string;
-  rating: number;
-  difficulty: 'Easy' | 'Medium' | 'Hard';
-}
+import { Activity } from '@/hooks/useActivities';
 
 interface WanderoSlotMachineProps {
+  activities: Activity[];
   activeFilters: string[];
   onSpin: () => void;
   onActivitySelect: (activities: Activity[]) => void;
@@ -25,134 +13,8 @@ interface WanderoSlotMachineProps {
   spinCount: number;
 }
 
-const ACTIVITIES: Record<string, Activity[]> = {
-  outdoors: [
-    {
-      id: '1',
-      title: 'Nature Scavenger Hunt',
-      time: '10:00 AM',
-      category: 'Outdoors',
-      icon: '🌲',
-      location: 'Local Park',
-      duration: '2 hours',
-      description: 'Find hidden treasures in nature! Look for pinecones, colorful leaves, and cool rocks.',
-      image: 'photo-1472396961693-142e6e269027',
-      rating: 4.8,
-      difficulty: 'Easy'
-    },
-    {
-      id: '4',
-      title: 'Hiking Adventure',
-      time: '8:00 AM',
-      category: 'Outdoors',
-      icon: '🥾',
-      location: 'Mountain Trail',
-      duration: '3 hours',
-      description: 'Explore scenic mountain paths and enjoy breathtaking views.',
-      image: 'photo-1500673922987-e212871fec22',
-      rating: 4.7,
-      difficulty: 'Medium'
-    },
-    {
-      id: '5',
-      title: 'Beach Volleyball',
-      time: '4:00 PM',
-      category: 'Outdoors',
-      icon: '🏐',
-      location: 'Sandy Beach',
-      duration: '1.5 hours',
-      description: 'Fun beach volleyball game with friends and family.',
-      image: 'photo-1472396961693-142e6e269027',
-      rating: 4.5,
-      difficulty: 'Medium'
-    }
-  ],
-  arts: [
-    {
-      id: '2',
-      title: 'Art Workshop',
-      time: '2:00 PM',
-      category: 'Arts',
-      icon: '🎨',
-      location: 'Art Studio',
-      duration: '1.5 hours',
-      description: 'Express your creativity with colors, brushes, and imagination!',
-      image: 'photo-1523712999610-f77fbcfc3843',
-      rating: 4.9,
-      difficulty: 'Easy'
-    },
-    {
-      id: '6',
-      title: 'Pottery Class',
-      time: '11:00 AM',
-      category: 'Arts',
-      icon: '🏺',
-      location: 'Pottery Studio',
-      duration: '2 hours',
-      description: 'Learn to shape clay and create beautiful ceramic pieces.',
-      image: 'photo-1493397212122-2b85dda8106b',
-      rating: 4.6,
-      difficulty: 'Medium'
-    },
-    {
-      id: '7',
-      title: 'Music Jamming',
-      time: '6:00 PM',
-      category: 'Arts',
-      icon: '🎶',
-      location: 'Music Room',
-      duration: '1 hour',
-      description: 'Join others for a fun music jam session with various instruments.',
-      image: 'photo-1581090464777-f3220bbe1b8b',
-      rating: 4.4,
-      difficulty: 'Easy'
-    }
-  ],
-  indoors: [
-    {
-      id: '3',
-      title: 'Movie Night',
-      time: '7:00 PM',
-      category: 'Indoors',
-      icon: '🍿',
-      location: 'Home Theater',
-      duration: '2.5 hours',
-      description: 'Cozy up with a family-friendly movie and delicious homemade popcorn.',
-      image: 'photo-1486312338219-ce68d2c6f44d',
-      rating: 4.6,
-      difficulty: 'Easy'
-    },
-    {
-      id: '8',
-      title: 'Board Game Night',
-      time: '3:00 PM',
-      category: 'Indoors',
-      icon: '🎲',
-      location: 'Living Room',
-      duration: '2 hours',
-      description: 'Challenge friends and family to exciting board games and puzzles.',
-      image: 'photo-1605810230434-7631ac76ec81',
-      rating: 4.8,
-      difficulty: 'Easy'
-    },
-    {
-      id: '9',
-      title: 'Playground Fun',
-      time: '1:00 PM',
-      category: 'Indoors',
-      icon: '🛝',
-      location: 'Indoor Playground',
-      duration: '2.5 hours',
-      description: 'Slides, swings, and climbing adventures in a safe indoor environment.',
-      image: 'photo-1470813740244-df37b8c1edcb',
-      rating: 4.7,
-      difficulty: 'Easy'
-    }
-  ]
-};
-
 // Slot machine emoji patterns based on Figma design
-const SLOT_EMOJIS = ['🏐', '🥾', '🌲', '🛝', '🍿', '🎶'];
+const SLOT_EMOJIS = ['🦆', '🏖️', '🌲', '🛝', '🍿', '🎶'];
 
 // Component for individual slot reel with vertical animation
 const SlotReel: React.FC<{
@@ -213,6 +75,7 @@ const SlotReel: React.FC<{
 };
 
 const WanderoSlotMachine: React.FC<WanderoSlotMachineProps> = ({
+  activities,
   activeFilters,
   onSpin,
   onActivitySelect,
@@ -245,12 +108,28 @@ const WanderoSlotMachine: React.FC<WanderoSlotMachineProps> = ({
 
     setTimeout(() => {
       // Get all activities
-      const allActivities = Object.values(ACTIVITIES).flat();
+      const allActivities = activities;
       
       // Filter by active filters if any
-      const filteredActivities = activeFilters.length > 0 
-        ? allActivities.filter(activity => activeFilters.includes(activity.category.toLowerCase()))
-        : allActivities;
+      let filteredActivities = allActivities;
+      if (activeFilters.length > 0) {
+        // Map slot machine legacy categories to new categories
+        const categoryMap: Record<string, string[]> = {
+          'outdoors': ['Nature', 'Sports', 'Playgrounds'],
+          'arts': ['Arts', 'Museums'],
+          'indoors': ['Indoors', 'Museums']
+        };
+        
+        const matchingCategories = activeFilters.flatMap(filter => 
+          categoryMap[filter.toLowerCase()] || []
+        );
+        
+        if (matchingCategories.length > 0) {
+          filteredActivities = allActivities.filter(activity => 
+            matchingCategories.includes(activity.category)
+          );
+        }
+      }
       
       const availableActivities = filteredActivities.length > 0 ? filteredActivities : allActivities;
       
@@ -295,7 +174,12 @@ const WanderoSlotMachine: React.FC<WanderoSlotMachineProps> = ({
   const times = ['8am', '1:30pm', '6pm'];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#FD9A55] via-[#FF6B35] to-[#FF4500] relative overflow-hidden">
+    <div 
+      className="min-h-screen relative overflow-hidden"
+      style={{
+        background: 'radial-gradient(114.93% 114.93% at 129.17% 144.79%, #FFDECE 0%, #FF5300 100%)'
+      }}
+    >
       {/* Confetti Animation */}
       {showConfetti && (
         <Confetti
@@ -313,7 +197,7 @@ const WanderoSlotMachine: React.FC<WanderoSlotMachineProps> = ({
       <div className="flex flex-col items-center justify-center px-6 py-8 text-center">
         
         {/* Header Text - matching Figma design */}
-        <div className="mb-8 mt-4">
+        <div className="mb-8 mt-4" style={{ marginTop: '3.75rem' }}>
           <h1 className="font-['Reddit_Sans'] font-bold text-[28px] text-[#ffffff] leading-normal tracking-[-2px] mb-0">One tap</h1>
           <h2 className="font-['Reddit_Sans'] font-bold text-[28px] text-[#ffffff] leading-normal tracking-[-2px]">One day sorted!</h2>
         </div>
@@ -351,18 +235,18 @@ const WanderoSlotMachine: React.FC<WanderoSlotMachineProps> = ({
 
               {/* Active slots highlight box - always visible, following Figma design but transparent */}
               <div className="absolute bg-[rgba(255,255,255,0.9)] rounded-[14px] shadow-[0px_8px_15px_0px_rgba(181,181,181,0.35)] pointer-events-none backdrop-blur-sm transition-all duration-500 ease-in-out" style={{
-                width: '111%',
-                top: showResults ? '78px' : '110px',
-                left: '-4.5%',
+                width: showResults ? '108%' : '111%',
+                top: showResults ? '85px' : '110px',
+                left: '-5.5%',
                 height: showResults ? 'auto' : '61px',
-                zIndex: showResults ? 100 : 90,
+                zIndex: 100,
                 display: showResults ? 'flex' : 'block',
                 alignItems: showResults ? 'stretch' : 'initial',
-                justifyContent: showResults ? 'space-evenly' : 'initial',
-                rowGap: showResults ? 'initial' : 'initial',
+                justifyContent: showResults ? 'center' : 'initial',
+                rowGap: 'initial',
                 flexDirection: showResults ? 'row' : 'initial',
                 flexWrap: showResults ? 'nowrap' : 'initial',
-                padding: showResults ? '0' : 'initial',
+                padding: showResults ? '0px 5%' : 'initial',
                 border: showResults ? '1px solid #FFBF00' : 'none'
               }}>
                 {/* Animated content injection when results are sorted */}
@@ -447,7 +331,7 @@ const WanderoSlotMachine: React.FC<WanderoSlotMachineProps> = ({
         {/* Close Button - matching Figma design */}
         <Button 
           variant="outline" 
-          className="border-2 border-[#ffffff] text-[#ffffff] hover:bg-[#ffffff] hover:text-[#FF6B35] font-['Reddit_Sans'] font-bold text-[16px] uppercase tracking-[-1px] px-[22px] py-3 h-14 rounded-[34px] transition-all duration-200 flex items-center gap-2"
+          className="border-2 border-[#ffffff] text-[#ffffff] bg-transparent hover:bg-white hover:text-[#202020] font-['Reddit_Sans'] font-bold text-[16px] uppercase tracking-[-1px] px-[22px] py-3 h-14 rounded-[34px] transition-all duration-200 flex items-center gap-2"
           onClick={onClose}
         >
           <X className="h-8 w-8" />

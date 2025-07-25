@@ -53,7 +53,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ activeTab, onTabChange, onSpinCli
   const location = useLocation();
   
   const tabs = [
-    { id: 'home', icon: Home, label: 'Home', path: '/' },
+    { id: 'home', icon: Home, label: 'Home', path: '/home' },
     { id: 'discover', icon: Search, label: 'Discover', path: '/discover' },
     { id: 'calendar', icon: Calendar, label: 'Calendar', path: '/calendar' },
     { id: 'profile', icon: User, label: 'Profile', path: '/profile' }
@@ -78,7 +78,17 @@ const BottomNav: React.FC<BottomNavProps> = ({ activeTab, onTabChange, onSpinCli
   const currentActive = getCurrentActiveTab();
 
   return (
-    <div className="sticky bottom-0 left-0 right-0 z-50">
+    <div 
+      className="sticky bottom-0 left-0 right-0 z-50"
+      style={{
+        width: '375px',
+        position: 'fixed',
+        margin: '0 auto',
+        bottom: '74px',
+        top: 'auto',
+        zIndex: 1000
+      }}
+    >
       <div className="relative max-w-md mx-auto">
         {/* Custom curved background with shadow */}
         <div className="relative">
@@ -109,6 +119,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ activeTab, onTabChange, onSpinCli
               className={`p-0 h-6 w-6 ${
                 currentActive === 'home' ? 'text-[#FFA800]' : 'text-[#B9C2D1]'
               }`}
+              style={{ marginTop: '12px' }}
               onClick={() => handleTabClick(tabs[0])}
             >
               <Home className="h-6 w-6" />
@@ -123,6 +134,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ activeTab, onTabChange, onSpinCli
               className={`p-0 h-6 w-6 ${
                 currentActive === 'discover' ? 'text-[#FFA800]' : 'text-[#B9C2D1]'
               }`}
+              style={{ marginTop: '12px' }}
               onClick={() => handleTabClick(tabs[1])}
             >
               <Search className="h-6 w-6" />
@@ -147,6 +159,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ activeTab, onTabChange, onSpinCli
               className={`p-0 h-6 w-6 ${
                 currentActive === 'calendar' ? 'text-[#FFA800]' : 'text-[#B9C2D1]'
               }`}
+              style={{ marginTop: '12px' }}
               onClick={() => handleTabClick(tabs[2])}
             >
               <Calendar className="h-6 w-6" />
@@ -161,6 +174,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ activeTab, onTabChange, onSpinCli
               className={`p-0 h-6 w-6 ${
                 currentActive === 'profile' ? 'text-[#FFA800]' : 'text-[#B9C2D1]'
               }`}
+              style={{ marginTop: '12px' }}
               onClick={() => handleTabClick(tabs[3])}
             >
               <User className="h-6 w-6" />

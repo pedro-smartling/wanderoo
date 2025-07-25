@@ -6,13 +6,12 @@ import { BrowserRouter, Routes, Route, useNavigate, useLocation } from "react-ro
 import { Button } from "@/components/ui/button";
 import { MessageCircle } from "lucide-react";
 import IPhoneFrame from "@/components/ui/iphone-frame";
-import WanderoSlotMachine from "@/components/WanderoSlotMachine";
 import Home from "./pages/Home";
 import Chat from "./pages/Chat";
-import Index from "./pages/Index";
 import Calendar from "./pages/Calendar";
 import Discover from "./pages/Discover";
 import GetStarted from "./pages/GetStarted";
+import SpinPage from "./pages/SpinPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -43,7 +42,7 @@ const AppContent = () => (
       <Route path="/" element={<GetStarted />} />
       <Route path="/home" element={<Home />} />
       <Route path="/chat" element={<Chat />} />
-      <Route path="/spin" element={<WanderoSlotMachine activeFilters={[]} onSpin={() => {}} onActivitySelect={() => {}} onClose={() => window.history.back()} spinCount={0} />} />
+      <Route path="/spin" element={<SpinPage />} />
       <Route path="/discover" element={<Discover />} />
       <Route path="/calendar" element={<Calendar />} />
       {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

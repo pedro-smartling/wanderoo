@@ -57,13 +57,13 @@ const Calendar: React.FC = () => {
   const totalTasks = activities.length;
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="h-full bg-background pb-20">
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-4 pt-12 mb-2">
         <Button 
           variant="ghost" 
           size="sm"
-          onClick={() => navigate('/')}
+          onClick={() => navigate('/home')}
           className="w-10 h-10 p-0 rounded-full"
         >
           <ArrowLeft className="h-5 w-5" />
@@ -135,7 +135,7 @@ const Calendar: React.FC = () => {
               Visit 'Spin a day' to discover and add activities to your calendar
             </p>
             <Button 
-              onClick={() => navigate('/')}
+              onClick={() => navigate('/spin')}
               className="h-12 px-6 rounded-2xl"
             >
               Go to Spin a day

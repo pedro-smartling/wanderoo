@@ -1,8 +1,49 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Reddit+Sans:wght@400;500;600;700;800&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Custom utilities for Discover page */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;  /* Chrome, Safari, Opera */
+}
+
+/* iPhone safe area support */
+@supports (padding: max(0px)) {
+  .safe-area-top {
+    padding-top: max(0px, env(safe-area-inset-top));
+  }
+  
+  .safe-area-bottom {
+    padding-bottom: max(0px, env(safe-area-inset-bottom));
+  }
+}
+
+/* Discover page specific styles */
+.discover-map-container {
+  height: 100% !important;
+  min-height: 560px !important;
+}
+
+.discover-leaflet-map {
+  height: 100% !important;
+  min-height: 576px !important;
+}
+
+.discover-leaflet-map .leaflet-container {
+  height: 100% !important;
+  min-height: 400px !important;
+}
+
+/* Hide Leaflet popups during fade animations */
+.leaflet-fade-anim .leaflet-map-pane .leaflet-popup {
+  display: none;
+}
 
 @layer base {
   :root {
@@ -18,8 +59,8 @@
     --secondary-foreground: 32 32 32;
     --muted: 243 244 246;
     --muted-foreground: 107 114 128;
-    --accent: 107 193 89;
-    --accent-foreground: 255 255 255;
+    --accent: 255 223 207;
+    --accent-foreground: 32 32 32;
     --destructive: 239 68 68;
     --destructive-foreground: 255 255 255;
     --border: 229 231 235;
@@ -48,8 +89,8 @@
     --secondary-foreground: 255 255 255;
     --muted: 68 68 68;
     --muted-foreground: 156 163 175;
-    --accent: 107 193 89;
-    --accent-foreground: 255 255 255;
+    --accent: 255 223 207;
+    --accent-foreground: 32 32 32;
     --destructive: 239 68 68;
     --destructive-foreground: 255 255 255;
     --border: 68 68 68;
@@ -261,4 +302,14 @@
 
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(253, 122, 55, 0.8);
+}
+
+/* Hide scrollbars */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }

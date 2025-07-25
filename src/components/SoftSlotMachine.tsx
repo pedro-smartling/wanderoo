@@ -28,26 +28,26 @@ const ACTIVITIES: Record<string, Activity[]> = {
   outdoors: [
     {
       id: '1',
-      title: 'Nature Scavenger Hunt',
+      title: 'Nature Treasure Hunt',
       time: '10:00 AM',
       category: 'Outdoors',
       icon: '🌲',
       location: 'Local Park',
-      duration: '2 hours',
-      description: 'Find hidden treasures in nature! Look for pinecones, colorful leaves, and cool rocks.',
+      duration: '1 hour',
+      description: 'Find colorful leaves, smooth rocks, and pretty flowers! Perfect for little explorers.',
       image: 'photo-1472396961693-142e6e269027',
       rating: 4.8,
       difficulty: 'Easy'
     },
     {
       id: '2',
-      title: 'Playground Adventure',
-      time: '11:00 AM',
+      title: 'Duck Feeding Adventure',
+      time: '10:30 AM',
       category: 'Outdoors',
-      icon: '🏃‍♂️',
-      location: 'Adventure Playground',
-      duration: '1.5 hours',
-      description: 'Swing, slide, and climb your way to fun! Perfect for burning energy.',
+      icon: '🦆',
+      location: 'Pond Park',
+      duration: '45 minutes',
+      description: 'Bring bread crumbs and feed the friendly ducks at the pond!',
       image: 'photo-1500673922987-e212871fec22',
       rating: 4.9,
       difficulty: 'Easy'
@@ -56,26 +56,26 @@ const ACTIVITIES: Record<string, Activity[]> = {
   indoors: [
     {
       id: '3',
-      title: 'Coding Workshop',
+      title: 'Finger Painting Fun',
       time: '2:00 PM',
       category: 'Indoors',
-      icon: '💻',
-      location: 'Tech Center',
-      duration: '2 hours',
-      description: 'Learn to code with fun games and colorful blocks. Create your first app!',
+      icon: '🎨',
+      location: 'Art Corner',
+      duration: '1 hour',
+      description: 'Get messy and creative with colorful finger paints! Make your masterpiece.',
       image: 'photo-1461749280684-dccba630e2f6',
       rating: 4.7,
-      difficulty: 'Medium'
+      difficulty: 'Easy'
     },
     {
       id: '4',
-      title: 'Movie & Popcorn Time',
-      time: '3:00 PM',
+      title: 'Cartoon Movie Time',
+      time: '2:00 PM',
       category: 'Indoors',
-      icon: '🎬',
-      location: 'Home Theater',
-      duration: '2.5 hours',
-      description: 'Cozy up with a family-friendly movie and delicious homemade popcorn.',
+      icon: '🍿',
+      location: 'Living Room',
+      duration: '1.5 hours',
+      description: 'Watch your favorite animated movies with yummy snacks and cozy blankets!',
       image: 'photo-1486312338219-ce68d2c6f44d',
       rating: 4.6,
       difficulty: 'Easy'
@@ -84,46 +84,29 @@ const ACTIVITIES: Record<string, Activity[]> = {
   arts: [
     {
       id: '5',
-      title: 'Paint & Create Studio',
-      time: '1:00 PM',
+      title: 'Play-Doh Creations',
+      time: '11:00 AM',
       category: 'Arts',
-      icon: '🎨',
-      location: 'Art Studio',
-      duration: '1.5 hours',
-      description: 'Express your creativity with colors, brushes, and imagination!',
+      icon: '🧁',
+      location: 'Craft Table',
+      duration: '1 hour',
+      description: 'Squish, roll, and shape colorful Play-Doh into amazing animals and objects!',
       image: 'photo-1523712999610-f77fbcfc3843',
-      rating: 4.9,
+      rating: 4.8,
       difficulty: 'Easy'
-    }
-  ],
-  museums: [
+    },
     {
       id: '6',
-      title: 'Interactive Science Museum',
-      time: '10:30 AM',
-      category: 'Museums',
-      icon: '🔬',
-      location: 'City Science Museum',
-      duration: '3 hours',
-      description: 'Touch, explore, and discover amazing science experiments and exhibits.',
-      image: 'photo-1500673922987-e212871fec22',
-      rating: 4.8,
-      difficulty: 'Medium'
-    }
-  ],
-  sports: [
-    {
-      id: '7',
-      title: 'Mini Soccer League',
-      time: '4:00 PM',
-      category: 'Sports',
-      icon: '⚽',
-      location: 'Sports Complex',
-      duration: '1 hour',
-      description: 'Join a fun soccer game with kids your age. Teamwork and goals await!',
-      image: 'photo-1472396961693-142e6e269027',
-      rating: 4.7,
-      difficulty: 'Medium'
+      title: 'Musical Instruments Play',
+      time: '3:00 PM',
+      category: 'Arts',
+      icon: '🎶',
+      location: 'Music Corner',
+      duration: '45 minutes',
+      description: 'Bang drums, shake maracas, and make beautiful music with kid-friendly instruments!',
+      image: 'photo-1581090464777-f3220bbe1b8b',
+      rating: 4.4,
+      difficulty: 'Easy'
     }
   ]
 };

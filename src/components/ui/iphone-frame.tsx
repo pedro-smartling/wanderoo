@@ -11,7 +11,9 @@ const IPhoneFrame: React.FC<IPhoneFrameProps> = ({ children }) => {
         {/* iPhone Frame */}
         <div className="relative bg-black rounded-[3rem] p-2 shadow-2xl">
           {/* iPhone Screen Container */}
-          <div className="relative bg-white rounded-[2.5rem] overflow-hidden w-[375px] h-[812px]">
+          <div 
+            className="relative bg-white rounded-[2.5rem] w-[375px] h-[812px] overflow-hidden"
+          >
             
             {/* iPhone Notch */}
             <div className="absolute top-0 left-1/2 transform -translate-x-1/2 z-50">
@@ -54,7 +56,10 @@ const IPhoneFrame: React.FC<IPhoneFrameProps> = ({ children }) => {
             </div>
 
             {/* App Content */}
-            <div className="absolute top-0 left-0 right-0 bottom-0 overflow-hidden">
+            <div 
+              className="absolute left-0 right-0 bottom-0 scrollbar-hide"
+              style={{ top: 0, overflow: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+            >
               <div className="relative w-full h-full">
                 {children}
               </div>
@@ -71,9 +76,6 @@ const IPhoneFrame: React.FC<IPhoneFrameProps> = ({ children }) => {
           
           {/* Power Button */}
           <div className="absolute right-[-3px] top-[140px] w-[3px] h-[60px] bg-gray-700 rounded-r-sm"></div>
-          
-          {/* Camera bump simulation */}
-          <div className="absolute top-4 left-8 w-[60px] h-[60px] bg-gray-800 rounded-2xl opacity-20"></div>
         </div>
 
         {/* iPhone Shadow */}

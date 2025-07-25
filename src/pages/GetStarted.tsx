@@ -64,6 +64,7 @@ const GetStarted = () => {
           <source src="/videos/kids-playing-outdoors.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
+        
         {/* Dark overlay for better text readability */}
         <div 
           className="absolute inset-0" 
@@ -74,9 +75,12 @@ const GetStarted = () => {
       </div>
 
       {/* Content Container */}
-      <div className="relative h-full flex flex-col items-center justify-center px-6">
+      <div className="relative h-full flex flex-col items-center justify-between px-6 py-12">
+        {/* Top spacer */}
+        <div className="flex-1"></div>
+        
         {/* Wanderoo Logo */}
-        <div className="flex items-center justify-center mb-16">
+        <div className="flex items-center justify-center">
           <div className="w-[231px] h-[49px]">
             <svg
               className="block size-full"
@@ -136,11 +140,11 @@ const GetStarted = () => {
           </div>
         </div>
 
+        {/* Bottom spacer */}
+        <div className="flex-1"></div>
+        
         {/* Buttons Container */}
-        <div 
-          className="w-full max-w-[337px] flex flex-col gap-3"
-          style={{ position: 'absolute', bottom: '32px' }}
-        >
+        <div className="w-full max-w-[337px] flex flex-col gap-3 mb-4">
           {/* Sign In Button */}
           <Button
             onClick={handleSignIn}
@@ -174,10 +178,7 @@ const GetStarted = () => {
         </div>
 
         {/* Home Indicator */}
-        <div 
-          className="absolute left-1/2 transform -translate-x-1/2 w-[125px] h-[5px] bg-[#3d3d42] rounded-full" 
-          style={{ position: 'absolute', bottom: '32px' }}
-        />
+        <div className="w-[125px] h-[5px] bg-[#3d3d42] rounded-full mb-4"></div>
       </div>
     </div>
   );
