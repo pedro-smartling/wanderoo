@@ -10,7 +10,7 @@ const GetStarted = () => {
     setIsSliding(true);
     // Wait for animation to complete before navigating
     setTimeout(() => {
-      navigate('/home');
+      navigate('/discover');
     }, 500);
   };
 
@@ -171,14 +171,14 @@ const GetStarted = () => {
           <Button
             onClick={handleContinueAsGuest}
             variant="ghost"
-            className="w-full h-14 bg-transparent text-white font-bold text-base uppercase tracking-[-0.75px] rounded-[34px] hover:bg-white/10 border-none underline decoration-solid underline-offset-4"
+            className="w-full h-14 bg-transparent text-white font-bold text-base uppercase tracking-[-0.75px] rounded-[34px] border-none underline decoration-solid underline-offset-4 hover:bg-transparent hover:text-white"
           >
             CONTINUE AS GUEST
           </Button>
         </div>
 
         {/* Home Indicator */}
-        <div className="w-[125px] h-[5px] bg-[#3d3d42] rounded-full mb-4"></div>
+        <div className="w-[125px] h-[5px] bg-[#3d3d42] rounded-full mb-4" style={{ display: 'none' }}></div>
       </div>
     </div>
   );

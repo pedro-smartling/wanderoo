@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route, useNavigate, useLocation } from "react-ro
 import { Button } from "@/components/ui/button";
 import { MessageCircle } from "lucide-react";
 import IPhoneFrame from "@/components/ui/iphone-frame";
+import { useMobileDetection } from "@/hooks/useMobileDetection";
 import Home from "./pages/Home";
 import Chat from "./pages/Chat";
 import Calendar from "./pages/Calendar";
@@ -48,22 +49,43 @@ const AppContent = () => (
       {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
       <Route path="*" element={<NotFound />} />
     </Routes>
-    <FloatingChatButton />
+    {/* <FloatingChatButton /> */}
   </div>
 );
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <IPhoneFrame>
-          <AppContent />
-        </IPhoneFrame>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+const App = () => {
+  const { isMobile, isChecking } = useMobileDetection();
+
+  // Show a brief loading state while detecting device type
+  if (isChecking) {
+    return (
+      <div className="w-full h-screen bg-white flex items-center justify-center">
+        <div className="text-lg text-gray-600">Loading...</div>
+      </div>
+    );
+  }
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          {isMobile ? (
+            // On mobile devices, render content directly without iPhone frame
+            <div className="w-full h-screen bg-white overflow-hidden mobile-native">
+              <AppContent />
+            </div>
+          ) : (
+            // On desktop/tablet, use iPhone frame for mobile simulation
+            <IPhoneFrame>
+              <AppContent />
+            </IPhoneFrame>
+          )}
+        </BrowserRouter>
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;

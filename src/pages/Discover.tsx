@@ -95,7 +95,7 @@ const Discover = () => {
   useEffect(() => {
     if (selectedCategory) {
       setFilteredActivities(allActivities.filter(activity => activity.category === selectedCategory));
-    } else {
+      } else {
       setFilteredActivities(allActivities);
     }
   }, [selectedCategory, allActivities]);
@@ -138,18 +138,18 @@ const Discover = () => {
   const handleActivityAction = (activity: Activity, accepted: boolean) => {
     if (accepted) {
       // Save activity to calendar
-      const savedActivities = JSON.parse(localStorage.getItem('approvedActivities') || '[]');
-      const calendarActivity = {
-        id: `discover-${activity.id}-${Date.now()}`,
-        time: activity.time,
-        title: activity.title,
-        description: activity.description,
-        completed: false,
-        color: 'blue' as 'yellow' | 'blue' | 'green',
-        category: activity.category,
-        location: activity.location,
-        duration: activity.duration
-      };
+    const savedActivities = JSON.parse(localStorage.getItem('approvedActivities') || '[]');
+    const calendarActivity = {
+      id: `discover-${activity.id}-${Date.now()}`,
+      time: activity.time,
+      title: activity.title,
+      description: activity.description,
+      completed: false,
+      color: 'blue' as 'yellow' | 'blue' | 'green',
+      category: activity.category,
+      location: activity.location,
+      duration: activity.duration
+    };
       localStorage.setItem('approvedActivities', JSON.stringify([...savedActivities, calendarActivity]));
       
       toast({
@@ -172,15 +172,15 @@ const Discover = () => {
             <p className="text-[12px] text-gray-600">{currentDate}</p>
           </div>
           <div className="flex gap-2">
-            <Button
-              variant="ghost"
-              size="sm"
+          <Button
+            variant="ghost"
+            size="sm"
               onClick={refreshActivities}
               className="p-1.5"
               title="Refresh activities"
-            >
+          >
               <RefreshCw className="h-5 w-5 text-gray-700" />
-            </Button>
+          </Button>
             <Button
               variant="ghost"
               size="sm"
@@ -190,13 +190,13 @@ const Discover = () => {
             >
               <Menu className="h-5 w-5 text-gray-700" />
             </Button>
-          </div>
+            </div>
         </div>
 
         {/* Category Filters */}
-        <div className="px-4 pb-3 border-t border-gray-100">
+        <div className="px-4 pb-3">
           <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
-            {categories.map((category) => (
+          {categories.map((category) => (
               <Button
                 key={category.name}
                 variant={selectedCategory === category.name ? "default" : "outline"}
@@ -226,32 +226,34 @@ const Discover = () => {
         >
           <MapUpdater center={mapCenter} />
           <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+            url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+            subdomains="abcd"
+            maxZoom={20}
           />
           {filteredActivities.map((activity) => (
-            <Marker
-              key={activity.id}
+              <Marker
+                key={activity.id}
               position={[activity.coordinates[0], activity.coordinates[1]]}
               icon={createCustomMarker(activity)}
               eventHandlers={{
                 click: () => handleMarkerClick(activity)
               }}
-            >
-              <Popup>
-                <div className="p-2 min-w-[200px]">
-                  <h3 className="font-semibold text-sm mb-1">{activity.title}</h3>
-                  <p className="text-xs text-gray-600 mb-2">{activity.location}</p>
-                  <div className="flex items-center justify-between mb-2">
+              >
+                <Popup>
+                  <div className="p-2 min-w-[200px]">
+                    <h3 className="font-semibold text-sm mb-1">{activity.title}</h3>
+                    <p className="text-xs text-gray-600 mb-2">{activity.location}</p>
+                    <div className="flex items-center justify-between mb-2">
                     <span className="text-sm font-medium">
                       {activity.price === 0 ? 'Free' : `£${activity.price}`}
                     </span>
                     <span className="text-xs">★ {activity.rating}</span>
-                  </div>
+                    </div>
                   <Button
                     onClick={() => handleActivityCardClick(activity)}
                     className="w-full bg-orange-500 hover:bg-orange-600 text-white text-xs py-1 px-2 rounded"
-                  >
+                    >
                     View Details
                   </Button>
                 </div>
@@ -268,8 +270,8 @@ const Discover = () => {
         className="flex-shrink-0 h-[140px] bg-white border-t border-gray-100"
         style={{
           background: 'transparent',
-          position: 'fixed',
-          bottom: '190px',
+          position: 'absolute',
+          bottom: '100px',
           zIndex: 1000,
           border: 0,
           height: 'auto',
@@ -380,8 +382,8 @@ const Discover = () => {
                   ))}
                 </SelectContent>
               </Select>
-            </div>
-            
+                  </div>
+                  
             <div>
               <label className="text-sm font-medium text-gray-700 mb-2 block">
                 Select Date
@@ -397,15 +399,15 @@ const Discover = () => {
                   <SelectItem value="Tue, 29 July 2025">Tue, 29 July 2025</SelectItem>
                 </SelectContent>
               </Select>
-            </div>
-            
+                </div>
+                
             <Button 
               className="w-full h-12 bg-orange-500 hover:bg-orange-600 text-white font-medium rounded-xl"
               onClick={() => setIsCitySheetOpen(false)}
             >
               Update Location
-            </Button>
-          </div>
+                </Button>
+              </div>
         </SheetContent>
       </Sheet>
 

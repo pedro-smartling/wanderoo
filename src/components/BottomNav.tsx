@@ -82,9 +82,9 @@ const BottomNav: React.FC<BottomNavProps> = ({ activeTab, onTabChange, onSpinCli
       className="sticky bottom-0 left-0 right-0 z-50"
       style={{
         width: '375px',
-        position: 'fixed',
+        position: 'absolute',
         margin: '0 auto',
-        bottom: '74px',
+        bottom: '0',
         top: 'auto',
         zIndex: 1000
       }}

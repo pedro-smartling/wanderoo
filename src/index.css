@@ -32,7 +32,7 @@
 
 .discover-leaflet-map {
   height: 100% !important;
-  min-height: 576px !important;
+  min-height: 618px !important;
 }
 
 .discover-leaflet-map .leaflet-container {
@@ -43,6 +43,19 @@
 /* Hide Leaflet popups during fade animations */
 .leaflet-fade-anim .leaflet-map-pane .leaflet-popup {
   display: none;
+}
+
+/* Mobile native styling when iPhone frame is removed */
+.mobile-native {
+  /* Ensure full viewport usage on mobile */
+  min-height: 100vh;
+  min-height: 100dvh; /* Dynamic viewport height for mobile browsers */
+  
+  /* Handle safe areas on mobile devices */
+  padding-top: env(safe-area-inset-top, 0);
+  padding-bottom: env(safe-area-inset-bottom, 0);
+  padding-left: env(safe-area-inset-left, 0);
+  padding-right: env(safe-area-inset-right, 0);
 }
 
 @layer base {
