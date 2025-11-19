@@ -56,17 +56,13 @@ const SpinPage = () => {
         }));
         
         localStorage.setItem('approvedActivities', JSON.stringify([...savedActivities, ...calendarActivities]));
-        
-        // Navigate to calendar
-        navigate('/calendar');
-      } else {
-        // No activities accepted, just close
-        handleCloseCard();
-        // Navigate back to home if no activities were accepted
-        setTimeout(() => {
-          navigate('/home');
-        }, 500);
       }
+      
+      // Always navigate to calendar after completing the review process
+      handleCloseCard();
+      setTimeout(() => {
+        navigate('/calendar');
+      }, 500);
     }
   };
 
@@ -82,7 +78,7 @@ const SpinPage = () => {
   };
 
   const handleClose = () => {
-    navigate('/home');
+    navigate('/discover');
   };
 
   return (
